@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-  async orderReceiptEmail(order) {
+  async emailOrderReceipt(order) {
     return `
         <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -141,7 +141,7 @@ module.exports = {
                 </td>
               </tr>
                       <tr>
-                           <td class="o_re o_bb-light" style="font-size: 2px;line-height: 2px;height: 2px;vertical-align: top;border-bottom: 1px solid #708670;" data-border-bottom-color="Border Light">&nbsp; </td>
+                           <td class="o_re o_bb-light" style="font-size: 2px;line-height: 2px;height: 2px;vertical-align: top;border-bottom: 1px solid #FFE487;" data-border-bottom-color="Border Light">&nbsp; </td>
                        </tr>
                       <tr>
                 <td height="20" align="center" valign="top" style="font-size:20px;line-height:20px;">&nbsp;</td>
@@ -159,7 +159,9 @@ module.exports = {
                                       <tbody>
                                       <tr>
                                                   <td class="centerText"  valign="middle" style="font-family:'Poppins', sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 28px;line-height: 32px;text-align: left;padding-left: 8px;padding-right: 8px; vertical-align: middle;">
-                                                    <p class="o_text o_text-secondary"  style="font-size: 24px;line-height: 32px;color: #FFE487;margin-top: 0px;margin-bottom: 0px;">x${item.quantity}</p>
+                                                    <p class="o_text o_text-secondary"  style="font-size: 24px;line-height: 32px;color: #FFE487;margin-top: 0px;margin-bottom: 0px;">x${
+                                                      item.quantity
+                                                    }</p>
                                                   </td>
                                       </tr>
 
@@ -183,7 +185,12 @@ module.exports = {
 
                                       <tbody><tr>
                                         <td class="imgAuto"  style= "font-family:'Poppins', sans-serif;margin-top: 0px;margin-bottom: 0px;text-align: left;padding-left: 8px;padding-right: 8px;">
-                                                      <img src="localhost:1337${item.variant.images[0].url}" width="90" style="width: 90px;" alt="${item.variant.id}">
+                                                      <img src="localhost:1337${
+                                                        item.variant.images[0]
+                                                          .url
+                                                      }" width="90" style="width: 90px;" alt="${
+                  item.variant.id
+                }">
                                                   </td>
                                       </tr>
                                     </tbody></table>
@@ -207,7 +214,11 @@ module.exports = {
 
                                       <tbody><tr>
                                                   <td class="centerText" style="font-family:'Poppins', sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 24px;line-height: 32px;text-align: center;padding-left: 8px;padding-right: 8px;"  align="left">
-                                                    <div class="o_text-secondary" data-color="Secondary" style="margin-bottom:0px;margin-block-start:0;margin-block-end:0;color: #FFE487;margin-middle: 0px;">codeblock - L - Male
+                                                    <div class="o_text-secondary" data-color="Secondary" style="margin-bottom:0px;margin-block-start:0;margin-block-end:0;color: #FFE487;margin-middle: 0px;">${
+                                                      item.name
+                                                    }${
+                  item.variant.size ? ` - ${item.variant.size}` : ""
+                }${item.variant.style ? ` - ${item.variant.style}` : ""}
                                                   </td>
                                       </tr>
                                     </tbody></table>
@@ -232,7 +243,7 @@ module.exports = {
 
                                                   <td class="centerText" align="right" width="100px" style="font-family:'Poppins', sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 24px;line-height: 32px;text-align: right;padding-left: 8px;padding-right: 8px;">
                                                       <p class="o_text-secondary" data-color="Secondary" style="color: #FFE487;margin-top: 0px;margin-bottom: 0px;">
-                                                        $9.99
+                                                        RM${item.variant.price}
                                                   </td>
                                       </tr>
                                     </tbody></table>
@@ -246,7 +257,7 @@ module.exports = {
                                 <td height="20" align="center" valign="top" style="font-size:20px;line-height:20px;">&nbsp;</td>
                               </tr>
                                       <tr>
-                                           <td class="o_re o_bb-light" style="font-size: 2px;line-height: 2px;height: 2px;vertical-align: top;border-bottom: 1px solid #708670;" data-border-bottom-color="Border Light">&nbsp; </td>
+                                           <td class="o_re o_bb-light" style="font-size: 2px;line-height: 2px;height: 2px;vertical-align: top;border-bottom: 1px solid #FFE487;" data-border-bottom-color="Border Light">&nbsp; </td>
                                        </tr>
                                       <tr>
                                 <td height="20" align="center" valign="top" style="font-size:20px;line-height:20px;">&nbsp;</td>
@@ -308,22 +319,30 @@ module.exports = {
                                           <tr>
                                               <td style="font-family:'Poppins', Arial, Helvetica, sans-serif;font-size: 24px;color: #FFE487; font-weight: 600;">Shipping</td>
                                               <td style="padding-right: 50px;">&nbsp;</td>
-                                             <td align="right" style="font-family:'Poppins', Arial, Helvetica, sans-serif;font-size: 24px;color: #FFE487;line-height: 24px">$8.99</td>
+                                             <td align="right" style="font-family:'Poppins', Arial, Helvetica, sans-serif;font-size: 24px;color: #FFE487;line-height: 24px">RM${
+                                               order.shippingOption.price
+                                             }</td>
                                           </tr>
                                         <tr>
                                             <td style="font-family:'Poppins', Arial, Helvetica, sans-serif;font-size: 24px;color: #FFE487; font-weight: 600;">Subtotal</td>
                                             <td style="padding-right: 50px;">&nbsp;</td>
-                                           <td align="right" style="font-family:'Poppins', Arial, Helvetica, sans-serif;font-size: 24px;color: #FFE487;line-height: 24px">$8.99</td>
+                                           <td align="right" style="font-family:'Poppins', Arial, Helvetica, sans-serif;font-size: 24px;color: #FFE487;line-height: 24px">RM${order.subtotal.toFixed(
+                                             2
+                                           )}</td>
                                         </tr>
                                         <tr>
                                             <td style="font-family:'Poppins', Arial, Helvetica, sans-serif;font-size: 24px;color: #FFE487; font-weight: 600;">Tax</td>
                                             <td style="padding-right: 50px;">&nbsp;</td>
-                                           <td align="right" style="font-family:'Poppins', Arial, Helvetica, sans-serif;font-size: 24px;color: #FFE487;line-height: 24px">$8.99</td>
+                                           <td align="right" style="font-family:'Poppins', Arial, Helvetica, sans-serif;font-size: 24px;color: #FFE487;line-height: 24px">RM${order.tax.toFixed(
+                                             2
+                                           )}</td>
                                         </tr>
                                         <tr>
                                             <td style="font-family:'Poppins', Arial, Helvetica, sans-serif;font-size: 24px;color: #FFE487; font-weight: 600;">Total</td>
                                             <td style="padding-right: 50px;">&nbsp;</td>
-                                           <td align="right" style="font-family:'Poppins', Arial, Helvetica, sans-serif;font-size: 24px;color: #FFE487;line-height: 24px">$29.99</td>
+                                           <td align="right" style="font-family:'Poppins', Arial, Helvetica, sans-serif;font-size: 24px;color: #FFE487;line-height: 24px">RM${order.total.toFixed(
+                                             2
+                                           )}</td>
                                         </tr>
                     </tbody></table>
                   </div>
@@ -361,7 +380,7 @@ module.exports = {
                 <td align="center" valign="middle" style="padding:0;padding-bottom:10px;">
                   <table border="0" align="center" cellpadding="0" cellspacing="0">
                     <tbody><tr>
-                      <td class="Blog-Dividers" width="590" align="center" style="border-bottom:1px solid #708670;border-radius:0px;">&nbsp;</td>
+                      <td class="Blog-Dividers" width="590" align="center" style="border-bottom:1px solid #FFE487;border-radius:0px;">&nbsp;</td>
                     </tr>
                   </tbody></table>
                 </td>
@@ -380,11 +399,13 @@ module.exports = {
 
               <tr>
                 <td data-size="Section Headlines" data-color="Section Headlines" class="Section Headlines" align="left" valign="middle" style="font-family:'Poppins',Arial,Helvetica,sans-serif;color:#FFE487;font-size:22px;line-height:28px;font-weight:400;letter-spacing:0px;padding:0px;padding-bottom:25px;">
-                  Zachary Reece <br>
+                  ${order.shippingInfo.name} <br>
 
-                  1234 S Example St <br>
+                  ${order.shippingAddress.street} <br>
 
-                  Wichita, KS 67211 <br>
+                  ${order.shippingAddress.city}, ${
+      order.shippingAddress.state
+    }, ${order.shippingAddress.postcode} <br>
                 </td>
               </tr>
 
@@ -397,7 +418,9 @@ module.exports = {
 
               <tr>
                 <td data-size="Section Headlines" data-color="Section Headlines" class="Section Headlines" align="left" valign="middle" style="font-family:'Poppins',Arial,Helvetica,sans-serif;color:#FFE487;font-size:22px;line-height:28px;font-weight:400;letter-spacing:0px;padding:0px;padding-bottom:15px;">
-                  Visa **** **** **** 1234
+                  ${order.paymentMethod.brand.toUpperCase()} **** **** **** ${
+      order.paymentMethod.last4
+    }
                 </td>
               </tr>
 

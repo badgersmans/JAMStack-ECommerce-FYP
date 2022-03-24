@@ -115,7 +115,7 @@ module.exports = {
   },
 
   async finalize(ctx) {
-    console.log(`ctx.request.body ->`, ctx.request.body);
+    // console.log(`ctx.request.body ->`, ctx.request.body);
     const {
       shippingAddress,
       billingAddress,
@@ -185,6 +185,17 @@ module.exports = {
     });
 
     order = sanitizeEntity(order, { model: strapi.models.order });
+
+    console.log(`order ->`, order);
+    const emailOrderReceipt = await strapi.services.order.emailOrderReceipt(
+      order
+    );
+
+    await strapi.plugins["email"].services.email.send({
+      to: order.billingInfo.email,
+      subject: "Dev++ Order Confirmation",
+      html: emailOrderReceipt,
+    });
 
     // overwrite guest user to avoid leaking other guest checkout info
     if (order.user.username === "Guest") {
