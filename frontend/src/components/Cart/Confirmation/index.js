@@ -135,6 +135,9 @@ function Confirmation({
   setOrder,
   order,
   stepNumber,
+  saveCard,
+  card,
+  cardSlot,
 }) {
   const classes = useStyles({ selectedStep, stepNumber })
   const stripe = useStripe()
@@ -194,7 +197,7 @@ function Confirmation({
       adornment: <img src={postcodeAdornment} alt="city, state, zip code" />,
     },
     {
-      value: "**** **** **** 1234",
+      value: `${card.brand.toUpperCase()} ${card.last4}`,
       adornment: (
         <img src={cardAdornment} alt="credit card" className={classes.card} />
       ),
@@ -256,6 +259,7 @@ function Confirmation({
             phone: billingDetails.phone,
           },
         },
+        setup_future_usage: saveCard ? "off_session" : undefined,
       },
       { idempotencyKey }
     )
@@ -285,6 +289,9 @@ function Confirmation({
             total: total.toFixed(2),
             items: cart,
             transaction: result.paymentIntent.id,
+            paymentMethod: card,
+            saveCard,
+            cardSlot,
           },
           {
             headers:

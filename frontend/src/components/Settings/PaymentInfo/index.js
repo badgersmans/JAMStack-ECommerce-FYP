@@ -81,6 +81,7 @@ function PaymentInfo({
   setCardError,
   selectedStep,
   stepNumber,
+  setCard,
 }) {
   const classes = useStyles({ isCheckout, selectedStep, stepNumber })
   const stripe = useStripe()
@@ -98,6 +99,16 @@ function PaymentInfo({
 
   const handleCardChange = async event => {
     if (event.complete) {
+      const cardElement = elements.getElement(CardElement)
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: "card",
+        card: cardElement,
+      })
+
+      setCard({
+        brand: paymentMethod.card.brand,
+        last4: paymentMethod.card.last4,
+      })
       setCardError(false)
       // console.log("valid")
     } else {
@@ -151,7 +162,7 @@ function PaymentInfo({
             align="center"
           >
             {card.last4
-              ? `${card[0].brand.toUpperCase()} **** **** **** ${card[0].last4}`
+              ? `${card.brand.toUpperCase()} **** **** **** ${card.last4}`
               : isCheckout
               ? null
               : "Add your cards during checkout"}

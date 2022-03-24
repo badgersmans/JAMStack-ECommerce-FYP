@@ -78,9 +78,10 @@ function CheckoutContainer({ user }) {
   })
   const [locationSlot, setLocationSlot] = useState(0)
   const [selectedShipping, setSelectedShipping] = useState(null)
-  const [paymentInfoSlot, setPaymentInfoSlot] = useState(0)
+  const [cardSlot, setCardSlot] = useState(0)
   const [saveCard, setSaveCard] = useState(false)
   const [order, setOrder] = useState(null)
+  const [card, setCard] = useState({ brand: "", last4: "" })
   const [cardError, setCardError] = useState(true)
   const shippingOptions = [
     { label: "FREE SHIPPING", price: 0 },
@@ -219,14 +220,15 @@ function CheckoutContainer({ user }) {
       title: "Payment",
       component: (
         <PaymentInfo
-          slot={paymentInfoSlot}
-          setSlot={setPaymentInfoSlot}
+          slot={cardSlot}
+          setSlot={setCardSlot}
           user={user}
           isCheckout
           saveCard={saveCard}
           setSaveCard={setSaveCard}
           setCardError={setCardError}
           selectedStep={selectedStep}
+          setCard={setCard}
         />
       ),
       error: cardError,
@@ -248,6 +250,9 @@ function CheckoutContainer({ user }) {
           setSelectedStep={setSelectedStep}
           setOrder={setOrder}
           order={order}
+          saveCard={saveCard}
+          card={card}
+          cardSlot={cardSlot}
         />
       ),
     },
