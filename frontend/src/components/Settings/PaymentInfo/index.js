@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import Button from "@material-ui/core/Button"
@@ -137,6 +137,21 @@ function PaymentInfo({
       />
     </form>
   )
+
+  useEffect(() => {
+    // check to make sure user is logged in and currently in checkout process
+    if (!isCheckout || !user.jwt) return
+
+    // if there is a saved payment method
+    if (user.paymentMethods[slot].last4 !== "") {
+      setCard(user.paymentMethods[slot])
+      setCardError(false)
+    } else {
+      // no saved payment method
+      setCard({ brand: "", last4: "" })
+      setCardError(true)
+    }
+  }, [slot])
 
   return (
     <Grid
