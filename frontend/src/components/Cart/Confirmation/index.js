@@ -18,9 +18,10 @@ import postcodeAdornment from "../../../images/zip-adornment.svg"
 import cardAdornment from "../../../images/card.svg"
 import promoAdornment from "../../../images/promo-code.svg"
 import formatMoney from "../../../../utils/formatMoney"
-import { CartContext, FeedbackContext } from "../../../contexts"
+import { CartContext, FeedbackContext, UserContext } from "../../../contexts"
 import { setSnackbar } from "../../../contexts/actions/feedback-actions"
 import { clearCart } from "../../../contexts/actions/cart-actions"
+import { setUser } from "../../../contexts/actions/user-actions"
 import { v4 as uuidv4 } from "uuid"
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 
@@ -148,6 +149,7 @@ function Confirmation({
   const [clientSecret, setClientSecret] = useState(null)
   const { cart, dispatchCart } = useContext(CartContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
+  const { dispatchUser } = useContext(UserContext)
   const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
 
   const shipping = shippingOptions.find(
@@ -301,6 +303,13 @@ function Confirmation({
           }
         )
         .then(response => {
+          if (saveCard) {
+            let newUser = { ...user }
+            newUser.paymentMethods[cardSlot] = card
+
+            dispatchUser(setUser(newUser))
+          }
+
           setLoading(false)
           dispatchCart(clearCart())
 

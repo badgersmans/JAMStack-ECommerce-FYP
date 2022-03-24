@@ -105,6 +105,9 @@ module.exports = {
       total,
       items,
       transaction,
+      saveCard,
+      cardSlot,
+      paymentMethod,
     } = ctx.request.body;
 
     let customerOrder;
@@ -132,6 +135,18 @@ module.exports = {
       })
     );
 
+    // if logged in and user wants to save card
+    if (saveCard && ctx.state.user) {
+      let newPaymentMethods = [...ctx.state.user.paymentMethods];
+
+      newPaymentMethods[cardSlot] = paymentMethod;
+
+      await strapi.plugins["users-permissions"].services.user.edit(
+        { id: customerOrder },
+        { paymentMethods: newPaymentMethods }
+      );
+    }
+
     let order = await strapi.services.order.create({
       shippingAddress,
       billingAddress,
@@ -144,6 +159,7 @@ module.exports = {
       items,
       transaction,
       user: customerOrder,
+      paymentMethod,
     });
 
     order = sanitizeEntity(order, { model: strapi.models.order });

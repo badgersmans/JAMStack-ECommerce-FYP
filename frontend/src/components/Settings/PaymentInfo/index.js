@@ -190,7 +190,7 @@ function PaymentInfo({
       >
         <Slots slot={slot} setSlot={setSlot} noLabel />
 
-        {isCheckout && (
+        {isCheckout && user.username !== "Guest" && (
           <Grid item>
             <FormControlLabel
               classes={{
