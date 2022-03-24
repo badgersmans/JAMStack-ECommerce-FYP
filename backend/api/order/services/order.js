@@ -180,7 +180,7 @@ module.exports = {
 
                                   <div class="row" style="display:inline-block;max-width:90px;vertical-align:middle;width:100%">
                                     <table class="row" border="0" align="center" cellpadding="0" cellspacing="0">
-// ..
+
                                       <tbody><tr>
                                         <td class="imgAuto"  style= "font-family:'Poppins', sans-serif;margin-top: 0px;margin-bottom: 0px;text-align: left;padding-left: 8px;padding-right: 8px;">
                                                       <img src="localhost:1337${item.variant.images[0].url}" width="90" style="width: 90px;" alt="${item.variant.id}">
