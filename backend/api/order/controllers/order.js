@@ -9,6 +9,11 @@ const { sanitizeEntity } = require("strapi-utils");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const GUEST_ID = "623413aeb5add55cc452bf11";
 
+const sanitizeUser = (user) =>
+  sanitizeEntity(user, {
+    model: strapi.query("user", "users-permissions").model,
+  });
+
 module.exports = {
   async process(ctx) {
     const {
@@ -187,5 +192,38 @@ module.exports = {
     }
     // finally send the order.
     ctx.send({ order }, 200);
+  },
+
+  async removeCard(ctx) {
+    const { card } = ctx.request.body;
+    const { stripeID } = ctx.state.user;
+
+    const stripePaymentMethods = await stripe.paymentMethods.list({
+      customer: stripeID,
+      type: "card",
+    });
+
+    const stripeCard = stripePaymentMethods.data.find(
+      (method) => method.card.last4 === card
+    );
+
+    await stripe.paymentMethods.detach(stripeCard.id);
+
+    let newPaymentMethods = [...ctx.state.user.paymentMethods];
+
+    const cardSlot = newPaymentMethods.findIndex(
+      (method) => method.last4 === card
+    );
+
+    newPaymentMethods[cardSlot] = { brand: "", last4: "" };
+
+    const newUserPaymentMethods = await strapi.plugins[
+      "users-permissions"
+    ].services.user.edit(
+      { id: ctx.state.user.id },
+      { paymentMethods: newPaymentMethods }
+    );
+
+    ctx.send({ user: sanitizeUser(newUserPaymentMethods) }, 200);
   },
 };
