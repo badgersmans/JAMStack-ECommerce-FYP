@@ -6,6 +6,8 @@ import Details from "../Details"
 import PaymentInfo from "../PaymentInfo"
 import Location from "../Location"
 import Edit from "../Edit"
+import { Elements } from "@stripe/react-stripe-js"
+import { loadStripe } from "@stripe/stripe-js"
 
 import { UserContext } from "../../../contexts"
 
@@ -58,6 +60,9 @@ function Settings({ setSelectedSetting }) {
 
   // console.log(`hasError ->`, hasError)
   // console.log(`user ->`, user)
+
+  const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
+
   return (
     <>
       <Grid
@@ -102,12 +107,15 @@ function Settings({ setSelectedSetting }) {
           errors={locationErrors}
           setErrors={setLocationErrors}
         />
-        <PaymentInfo
-          user={user}
-          edit={edit}
-          slot={paymentInfoSlot}
-          setSlot={setPaymentInfoSlot}
-        />
+
+        <Elements stripe={stripePromise}>
+          <PaymentInfo
+            user={user}
+            edit={edit}
+            slot={paymentInfoSlot}
+            setSlot={setPaymentInfoSlot}
+          />
+        </Elements>
       </Grid>
     </>
   )
