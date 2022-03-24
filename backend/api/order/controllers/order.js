@@ -18,6 +18,7 @@ module.exports = {
       idempotencyKey,
       storedIntent,
       email,
+      savedCard,
     } = ctx.request.body;
 
     let serverTotal = 0;
@@ -78,12 +79,28 @@ module.exports = {
         ctx.send({ client_secret: update.client_secret, intentID: update.id });
       } else {
         // generate new paymentIntent
+        let saved;
+
+        if (savedCard) {
+          // savedCard is only the last 4 of the card, not the actual card
+          const stripePaymentMethods = await stripe.paymentMethods.list({
+            customer: ctx.state.user.stripeID,
+            type: "card",
+          });
+
+          // saved here is the actual card
+          saved = stripePaymentMethods.data.find(
+            (method) => method.card.last4 === savedCard
+          );
+        }
+
         const intent = await stripe.paymentIntents.create(
           {
             amount: total * 100,
             currency: "MYR",
             customer: ctx.state.user ? ctx.state.user.stripeID : undefined,
             receipt_email: email,
+            payment_method: saved ? saved.id : undefined,
           },
           { idempotencyKey }
         );
