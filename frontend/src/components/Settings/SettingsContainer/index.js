@@ -58,6 +58,7 @@ const useStyles = makeStyles(theme => ({
     // height: "16rem",
     // width: "16rem",
     // borderRadius: 25,
+    display: "flex",
     textTransform: "none",
     backgroundColor: theme.palette.primary.main,
   },
@@ -99,7 +100,7 @@ function SettingsContainer() {
     { label: "Order History", icon: orderHistoryIcon, component: OrderHistory },
     { label: "Favorites", icon: favIcon },
     { label: "Subscriptions", icon: subscription },
-    { label: "Settings", icon: settingsIcon, component: Settings },
+    { label: "Settings", icon: settingsIcon, component: Settings, large: true },
   ]
 
   const handleClick = label => {
@@ -111,7 +112,6 @@ function SettingsContainer() {
     }
   }
 
-  const AnimatedButton = animated(Button)
   const AnimatedGrid = animated(Grid)
 
   const springs = useSprings(
@@ -131,7 +131,7 @@ function SettingsContainer() {
         const size = {
           height:
             selectedSetting === button.label
-              ? matchesMD
+              ? matchesMD && button.large
                 ? "120rem"
                 : "50rem"
               : buttonHeight,
