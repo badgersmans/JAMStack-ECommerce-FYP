@@ -173,7 +173,7 @@ function OrderHistory({ setSelectedSetting }) {
         onRowClick={e => setOpen(e.row.id)}
         hideFooterSelectedRowCount
       />
-      <OrderDetails open={open} setOpen={setOpen} />
+      <OrderDetails open={open} setOpen={setOpen} orders={orders} />
     </Grid>
   )
 }
