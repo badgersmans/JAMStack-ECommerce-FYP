@@ -6,6 +6,7 @@ import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
 import clsx from "clsx"
 import { makeStyles } from "@material-ui/core/styles"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
+import Button from "@material-ui/core/Button"
 import formatMoney from "../../../../../utils/formatMoney"
 import OrderDetailItems from "../OrderDetailItems"
 import DayJS from "react-dayjs"
@@ -18,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   drawer: {
     height: "100%",
     width: "30rem",
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: "transparent",
     [theme.breakpoints.down("xs")]: {
       width: "100%",
     },
@@ -48,7 +49,7 @@ const useStyles = makeStyles(theme => ({
   dark: {
     backgroundColor: theme.palette.secondary.main,
   },
-  chipRoot: {
+  light: {
     backgroundColor: theme.palette.primary.main,
   },
   prices: {
@@ -59,7 +60,9 @@ const useStyles = makeStyles(theme => ({
       fontSize: "1.25rem",
     },
   },
-  // drawer: {},
+  buttonSpacer: {
+    minHeight: "10rem",
+  },
   // drawer: {},
   // drawer: {},
   // drawer: {},
@@ -97,7 +100,14 @@ function OrderDetails({ open, setOpen, orders }) {
       disableDiscovery={iOS}
       anchor={matchesXS ? "bottom" : "right"}
     >
-      <Grid container direction="column">
+      <Grid
+        item
+        component={Button}
+        onClick={() => setOpen(null)}
+        classes={{ root: classes.buttonSpacer }}
+        disableRipple
+      />
+      <Grid container direction="column" classes={{ root: classes.light }}>
         <Grid item classes={{ root: classes.dark }}>
           <Typography
             variant="h2"
@@ -115,7 +125,7 @@ function OrderDetails({ open, setOpen, orders }) {
           <Grid item classes={{ root: classes.status }}>
             <Chip
               label={order?.status}
-              classes={{ label: classes.bold, root: classes.chipRoot }}
+              classes={{ label: classes.bold, root: classes.light }}
             />
           </Grid>
 
