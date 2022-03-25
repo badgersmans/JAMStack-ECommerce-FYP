@@ -6,6 +6,7 @@ import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
 import clsx from "clsx"
 import { makeStyles } from "@material-ui/core/styles"
 import formatMoney from "../../../../../utils/formatMoney"
+import OrderDetailItems from "../OrderDetailItems"
 import DayJS from "react-dayjs"
 import dayjs from "dayjs"
 let advancedFormat = require("dayjs/plugin/advancedFormat")
@@ -182,6 +183,20 @@ function OrderDetails({ open, setOpen, orders }) {
             </Grid>
           </Grid>
         ))}
+
+        <Grid item classes={{ root: clsx(classes.padding, classes.dark) }}>
+          <Typography
+            variant="body2"
+            classes={{ root: classes.bold }}
+            gutterBottom
+          >
+            Items
+          </Typography>
+
+          {order?.items.map(item => (
+            <OrderDetailItems key={item.variant.id} item={item} />
+          ))}
+        </Grid>
       </Grid>
     </SwipeableDrawer>
   )
