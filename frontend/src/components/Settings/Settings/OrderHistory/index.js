@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 
 function OrderHistory() {
   const classes = useStyles()
-  const [order, setOrder] = useState([])
+  const [orders, setOrders] = useState([])
   const { user } = useContext(UserContext)
 
   useEffect(() => {
@@ -47,11 +47,23 @@ function OrderHistory() {
       })
       .then(response => {
         console.log(response)
+
+        setOrders(response.data.orders)
       })
       .catch(error => {
         console.error(error)
       })
   }, [])
+
+  const createDataRows = data =>
+    data.map(item => ({
+      shipping: `${item.shippingInfo.name}\n${item.shippingAddress.street}\n${item.shippingAddress.city}, ${item.shippingAddress.state}, ${item.shippingAddress.postcode}`,
+      order: `#${item.id.slice(item.id.length - 10, item.id.length)}`,
+      status: item.status,
+      date: item.createdAt,
+      total: item.total,
+      id: item.id,
+    }))
 
   const columns = [
     { field: "shipping", headerName: "Shipping", flex: 1, sortable: false },
@@ -62,17 +74,11 @@ function OrderHistory() {
     { field: "", flex: 1.5, sortable: false },
   ]
 
-  const rows = [
-    // { shipping: "Law" },
-    // { order: "Shawn" },
-    // { status: "Shawn" },
-    // { date: "Shawn" },
-    // { total: "Shawn" },
-  ]
+  const rows = createDataRows(orders)
 
   return (
     <Grid item classes={{ root: classes.dataGridContainer }}>
-      <DataGrid rows={rows} columns={columns} pageSize={1} />
+      <DataGrid rows={rows} columns={columns} pageSize={5} />
     </Grid>
   )
 }
