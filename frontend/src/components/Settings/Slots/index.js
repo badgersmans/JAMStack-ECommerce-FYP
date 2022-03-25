@@ -17,8 +17,8 @@ const useStyles = makeStyles(theme => ({
     },
     border: `0.15rem solid ${theme.palette.secondary.main}`,
     [theme.breakpoints.down("xs")]: {
-      width: ({ isCheckout }) => (isCheckout ? "1.8rem" : "1rem"),
-      height: ({ isCheckout }) => (isCheckout ? "1.8rem" : "1rem"),
+      width: ({ isCheckout }) => (isCheckout ? "1.8rem" : "2rem"),
+      height: ({ isCheckout }) => (isCheckout ? "1.8rem" : "2rem"),
     },
   },
   slotText: {

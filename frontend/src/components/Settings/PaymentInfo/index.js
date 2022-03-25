@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography"
 import Button from "@material-ui/core/Button"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import CircularProgress from "@material-ui/core/CircularProgress"
+import useMediaQuery from "@material-ui/core/useMediaQuery"
 import Switch from "@material-ui/core/Switch"
 import { makeStyles } from "@material-ui/core/styles"
 import Slots from "../Slots"
@@ -22,12 +23,16 @@ const useStyles = makeStyles(theme => ({
     width: "4rem",
     height: "3rem",
     [theme.breakpoints.down("xs")]: {
-      marginBottom: "1rem",
+      marginBottom: ({ isCheckout }) => (isCheckout ? "3rem" : "1rem"),
     },
   },
   cardNumber: {
     color: theme.palette.common.WHITE,
     marginBottom: "5rem",
+    [theme.breakpoints.down("xs")]: {
+      marginBottom: ({ isCheckout }) => (isCheckout ? "1rem" : undefined),
+      fontSize: ({ isCheckout }) => (isCheckout ? "1.5rem" : undefined),
+    },
   },
   deleteCard: {
     backgroundColor: theme.palette.common.WHITE,
@@ -36,6 +41,9 @@ const useStyles = makeStyles(theme => ({
     marginLeft: "2rem",
     "&:hover": {
       backgroundColor: theme.palette.common.WHITE,
+    },
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: ({ isCheckout }) => (isCheckout ? 0 : undefined),
     },
   },
   deleteCardText: {
@@ -65,17 +73,28 @@ const useStyles = makeStyles(theme => ({
   switchText: {
     color: theme.palette.common.WHITE,
     fontWeight: 600,
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "1.25rem",
+    },
   },
   form: {
     width: "75%",
     borderBottom: `2px solid ${theme.palette.common.WHITE}`,
     height: "2rem",
     marginTop: "-1rem",
+    [theme.breakpoints.down("xs")]: {
+      width: "85%",
+    },
   },
   spinner: {
     marginLeft: "3rem",
   },
-  //   form: {},
+  switchItem: {
+    width: "100%",
+  },
+  numberWrapper: {
+    marginBottom: "5rem",
+  },
   //   cardNumber: {},
 }))
 
@@ -92,6 +111,7 @@ function PaymentInfo({
   setCard,
 }) {
   const classes = useStyles({ isCheckout, selectedStep, stepNumber })
+  const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
   const { dispatchFeedback } = useContext(FeedbackContext)
   const { dispatchUser } = useContext(UserContext)
   const [loading, setLoading] = useState(false)
@@ -216,7 +236,16 @@ function PaymentInfo({
         <img src={cardIcon} alt="payment info" className={classes.icon} />
       </Grid>
 
-      <Grid item container justify="center">
+      <Grid
+        item
+        container
+        justify="center"
+        classes={{
+          root: clsx({
+            [classes.numberWrapper]: isCheckout && matchesXS,
+          }),
+        }}
+      >
         {isCheckout && !card.last4 ? cardWrapper : null}
         <Grid item>
           <Typography
@@ -269,7 +298,14 @@ function PaymentInfo({
         <Slots slot={slot} setSlot={setSlot} noLabel />
 
         {isCheckout && user.username !== "Guest" && (
-          <Grid item>
+          <Grid
+            item
+            classes={{
+              root: clsx({
+                [classes.switchItem]: matchesXS,
+              }),
+            }}
+          >
             <FormControlLabel
               classes={{
                 root: classes.switchContainer,

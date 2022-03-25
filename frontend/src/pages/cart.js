@@ -21,6 +21,9 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("md")]: {
       fontSize: "3.5rem",
     },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "3rem",
+    },
   },
   // cartContainer: {},
   // cartContainer: {},
