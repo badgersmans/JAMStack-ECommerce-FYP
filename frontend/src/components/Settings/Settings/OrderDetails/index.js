@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import Chip from "@material-ui/core/Chip"
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
+import clsx from "clsx"
 import { makeStyles } from "@material-ui/core/styles"
 import DayJS from "react-dayjs"
 import dayjs from "dayjs"
@@ -19,6 +20,7 @@ const useStyles = makeStyles(theme => ({
   id: {
     fontSize: "2.25rem",
     fontWeight: 600,
+    marginLeft: "1rem",
   },
   bold: {
     fontWeight: 600,
@@ -26,7 +28,24 @@ const useStyles = makeStyles(theme => ({
   date: {
     fontWeight: 600,
     marginLeft: "1rem",
+    marginBottom: "1rem",
   },
+  // heading: {
+  //   marginTop: "1rem",
+  // },
+  padding: {
+    padding: "1rem",
+  },
+  status: {
+    marginLeft: "1rem",
+  },
+  dark: {
+    backgroundColor: theme.palette.secondary.main,
+  },
+  chipRoot: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  // drawer: {},
   // drawer: {},
   // drawer: {},
 }))
@@ -49,11 +68,11 @@ function OrderDetails({ open, setOpen, orders }) {
       //   anchor="right"
     >
       <Grid container direction="column">
-        <Grid item>
+        <Grid item classes={{ root: classes.dark }}>
           <Typography
             variant="h2"
             classes={{ root: classes.id }}
-            align="center"
+            // align="center"
           >
             Order #
             {order?.id
@@ -62,9 +81,12 @@ function OrderDetails({ open, setOpen, orders }) {
           </Typography>
         </Grid>
 
-        <Grid item container>
-          <Grid item>
-            <Chip label={order?.status} classes={{ label: classes.bold }} />
+        <Grid item container classes={{ root: classes.dark }}>
+          <Grid item classes={{ root: classes.status }}>
+            <Chip
+              label={order?.status}
+              classes={{ label: classes.bold, root: classes.chipRoot }}
+            />
           </Grid>
 
           <Grid item>
@@ -72,6 +94,46 @@ function OrderDetails({ open, setOpen, orders }) {
               {<DayJS format="Do MMM YYYY h:mma">{order?.createdAt}</DayJS>}
             </Typography>
           </Grid>
+        </Grid>
+
+        <Grid item classes={{ root: classes.padding }}>
+          <Typography variant="body2" classes={{ root: classes.bold }}>
+            Billing
+          </Typography>
+
+          <Typography variant="body2">
+            {order?.billingInfo.name}
+            <br />
+            {order?.billingInfo.email}
+            <br />
+            {order?.billingInfo.phone}
+            <br />
+            <br />
+            {order?.billingAddress.street}
+            <br />
+            {order?.billingAddress.city}, {order?.billingAddress.state}{" "}
+            {order?.billingAddress.postcode}
+          </Typography>
+        </Grid>
+
+        <Grid item classes={{ root: clsx(classes.padding, classes.dark) }}>
+          <Typography variant="body2" classes={{ root: classes.bold }}>
+            Shipping
+          </Typography>
+
+          <Typography variant="body2">
+            {order?.shippingInfo.name}
+            <br />
+            {order?.shippingInfo.email}
+            <br />
+            {order?.shippingInfo.phone}
+            <br />
+            <br />
+            {order?.shippingAddress.street}
+            <br />
+            {order?.shippingAddress.city}, {order?.shippingAddress.state}{" "}
+            {order?.shippingAddress.postcode}
+          </Typography>
         </Grid>
       </Grid>
     </SwipeableDrawer>
