@@ -5,6 +5,7 @@ import Chip from "@material-ui/core/Chip"
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
 import clsx from "clsx"
 import { makeStyles } from "@material-ui/core/styles"
+import useMediaQuery from "@material-ui/core/useMediaQuery"
 import formatMoney from "../../../../../utils/formatMoney"
 import OrderDetailItems from "../OrderDetailItems"
 import DayJS from "react-dayjs"
@@ -18,6 +19,9 @@ const useStyles = makeStyles(theme => ({
     height: "100%",
     width: "30rem",
     backgroundColor: theme.palette.primary.main,
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
   },
   id: {
     fontSize: "2.25rem",
@@ -50,7 +54,11 @@ const useStyles = makeStyles(theme => ({
   prices: {
     padding: "0.5rem 1rem",
   },
-  // drawer: {},
+  text: {
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "1.25rem",
+    },
+  },
   // drawer: {},
   // drawer: {},
   // drawer: {},
@@ -61,6 +69,7 @@ function OrderDetails({ open, setOpen, orders }) {
   const classes = useStyles()
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent)
   const order = orders.find(order => order.id === open)
+  const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
 
   const prices = [
     { label: "Subtotal", value: order?.subtotal },
@@ -86,7 +95,7 @@ function OrderDetails({ open, setOpen, orders }) {
       classes={{ paper: classes.drawer }}
       disableBackdropTransition={!iOS}
       disableDiscovery={iOS}
-      //   anchor="right"
+      anchor={matchesXS ? "bottom" : "right"}
     >
       <Grid container direction="column">
         <Grid item classes={{ root: classes.dark }}>
@@ -122,7 +131,7 @@ function OrderDetails({ open, setOpen, orders }) {
             Billing
           </Typography>
 
-          <Typography variant="body2">
+          <Typography variant="body2" classes={{ root: classes.text }}>
             {order?.billingInfo.name}
             <br />
             {order?.billingInfo.email}
@@ -142,7 +151,7 @@ function OrderDetails({ open, setOpen, orders }) {
             Shipping
           </Typography>
 
-          <Typography variant="body2">
+          <Typography variant="body2" classes={{ root: classes.text }}>
             {order?.shippingInfo.name}
             <br />
             {order?.shippingInfo.email}
@@ -173,7 +182,9 @@ function OrderDetails({ open, setOpen, orders }) {
 
             <Grid item>
               {price.string ? (
-                <Typography variant="body2">{price.string}</Typography>
+                <Typography variant="body2" classes={{ root: classes.text }}>
+                  {price.string}
+                </Typography>
               ) : (
                 <Chip
                   label={formatMoney(price.value)}
