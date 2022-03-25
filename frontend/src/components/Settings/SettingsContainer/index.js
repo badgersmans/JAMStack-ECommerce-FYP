@@ -10,6 +10,7 @@ import { setUser } from "../../../contexts/actions/user-actions"
 import { useSpring, useSprings, animated } from "react-spring"
 import useResizeAware from "react-resize-aware"
 import Settings from "../Settings"
+import OrderHistory from "../Settings/OrderHistory"
 
 import accountIcon from "../../../images/account.svg"
 import settingsIcon from "../../../images/settings.svg"
@@ -95,7 +96,7 @@ function SettingsContainer() {
   const buttonHeight = matchesMD ? "18rem" : "16rem"
 
   const buttons = [
-    { label: "Order History", icon: orderHistoryIcon },
+    { label: "Order History", icon: orderHistoryIcon, component: OrderHistory },
     { label: "Favorites", icon: favIcon },
     { label: "Subscriptions", icon: subscription },
     { label: "Settings", icon: settingsIcon, component: Settings },

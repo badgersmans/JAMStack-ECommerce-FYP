@@ -237,4 +237,16 @@ module.exports = {
 
     ctx.send({ user: sanitizeUser(newUserPaymentMethods) }, 200);
   },
+
+  async history(ctx) {
+    const orders = await strapi.services.order.find({
+      user: ctx.state.user.id,
+    });
+
+    const sanitizedOrders = orders.map((order) =>
+      sanitizeEntity(order, { model: strapi.models.order })
+    );
+
+    ctx.send({ orders: sanitizedOrders }, 200);
+  },
 };
