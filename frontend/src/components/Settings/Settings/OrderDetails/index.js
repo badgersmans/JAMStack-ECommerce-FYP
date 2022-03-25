@@ -5,6 +5,7 @@ import Chip from "@material-ui/core/Chip"
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
 import clsx from "clsx"
 import { makeStyles } from "@material-ui/core/styles"
+import formatMoney from "../../../../../utils/formatMoney"
 import DayJS from "react-dayjs"
 import dayjs from "dayjs"
 let advancedFormat = require("dayjs/plugin/advancedFormat")
@@ -45,6 +46,11 @@ const useStyles = makeStyles(theme => ({
   chipRoot: {
     backgroundColor: theme.palette.primary.main,
   },
+  prices: {
+    padding: "0.5rem 1rem",
+  },
+  // drawer: {},
+  // drawer: {},
   // drawer: {},
   // drawer: {},
   // drawer: {},
@@ -54,6 +60,20 @@ function OrderDetails({ open, setOpen, orders }) {
   const classes = useStyles()
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent)
   const order = orders.find(order => order.id === open)
+
+  const prices = [
+    { label: "Subtotal", value: order?.subtotal },
+    { label: "Shipping", value: order?.shippingOption.price },
+    { label: "Tax", value: order?.tax },
+    { label: "Total", value: order?.total },
+    {
+      label: "Payment",
+      string: `${order?.paymentMethod.brand.toUpperCase()} ${
+        order?.paymentMethod.last4
+      }`,
+    },
+    { label: "Transaction ID", string: `${order?.transaction} ` },
+  ]
 
   // console.log(`open? -> `, open)
   // console.log(`order? -> `, order)
@@ -135,6 +155,33 @@ function OrderDetails({ open, setOpen, orders }) {
             {order?.shippingAddress.postcode}
           </Typography>
         </Grid>
+
+        {prices.map(price => (
+          <Grid
+            item
+            container
+            justify="space-between"
+            classes={{ root: classes.prices }}
+            key={price.label}
+          >
+            <Grid item>
+              <Typography variant="body2" classes={{ root: classes.bold }}>
+                {price.label}
+              </Typography>
+            </Grid>
+
+            <Grid item>
+              {price.string ? (
+                <Typography variant="body2">{price.string}</Typography>
+              ) : (
+                <Chip
+                  label={formatMoney(price.value)}
+                  classes={{ label: classes.bold }}
+                />
+              )}
+            </Grid>
+          </Grid>
+        ))}
       </Grid>
     </SwipeableDrawer>
   )
