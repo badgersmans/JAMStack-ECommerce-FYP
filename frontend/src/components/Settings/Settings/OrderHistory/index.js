@@ -7,9 +7,11 @@ import { DataGrid } from "@material-ui/data-grid"
 import { makeStyles } from "@material-ui/core/styles"
 import IconButton from "@material-ui/core/IconButton"
 import { UserContext } from "../../../../contexts"
+import OrderDetails from "../OrderDetails"
 import dayjs from "dayjs"
 import formatMoney from "../../../../../utils/formatMoney"
 import BackwardsOutline from "../../../../images/BackwardsOutline"
+import detailsIcon from "../../../../images/details.svg"
 
 let advancedFormat = require("dayjs/plugin/advancedFormat")
 dayjs.extend(advancedFormat)
@@ -50,7 +52,7 @@ const useStyles = makeStyles(theme => ({
       "max-height": "100% !important",
     },
     ".MuiDataGrid-root .MuiDataGrid-footer": {
-      // "margin-top": "-2.5rem",
+      "margin-top": "-11rem",
     },
     ".MuiTablePagination-caption": {
       color: theme.palette.common.WHITE,
@@ -86,6 +88,7 @@ const useStyles = makeStyles(theme => ({
 function OrderHistory({ setSelectedSetting }) {
   const classes = useStyles()
   const [orders, setOrders] = useState([])
+  const [open, setOpen] = useState(null)
   const { user } = useContext(UserContext)
 
   useEffect(() => {
@@ -140,7 +143,16 @@ function OrderHistory({ setSelectedSetting }) {
         />
       ),
     },
-    { field: "", flex: 1.5, sortable: false },
+    {
+      field: "",
+      flex: 1.5,
+      sortable: false,
+      renderCell: () => (
+        <IconButton>
+          <img src={detailsIcon} alt="order details" />
+        </IconButton>
+      ),
+    },
   ]
 
   const rows = createDataRows(orders)
@@ -154,7 +166,14 @@ function OrderHistory({ setSelectedSetting }) {
           </div>
         </IconButton>
       </Grid>
-      <DataGrid rows={rows} columns={columns} pageSize={5} />
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        pageSize={3}
+        onRowClick={e => setOpen(e.row.id)}
+        hideFooterSelectedRowCount
+      />
+      <OrderDetails open={open} setOpen={setOpen} />
     </Grid>
   )
 }
