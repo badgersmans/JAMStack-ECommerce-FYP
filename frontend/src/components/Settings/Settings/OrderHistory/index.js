@@ -11,7 +11,20 @@ const useStyles = makeStyles(theme => ({
     height: "100%",
     width: "100%",
   },
-  // dataGridContainer: {},
+  "@global": {
+    ".MuiDataGrid-root .MuiDataGrid-colCellTitle": {
+      fontWeight: 600,
+    },
+    ".MuiDataGrid-root .MuiDataGrid-iconSeparator": {
+      display: "none",
+    },
+    ".MuiDataGrid-root .MuiDataGrid-colCellTitleContainer": {
+      "justify-content": "center",
+    },
+    ".MuiDataGrid-root .MuiDataGrid-colCellMoving": {
+      "background-color": "transparent",
+    },
+  },
   // dataGridContainer: {},
   // dataGridContainer: {},
   // dataGridContainer: {},
@@ -41,11 +54,12 @@ function OrderHistory() {
   }, [])
 
   const columns = [
-    { field: "shipping", headerName: "Shipping", flex: 1 },
+    { field: "shipping", headerName: "Shipping", flex: 1, sortable: false },
     { field: "order", headerName: "Order", flex: 1 },
     { field: "status", headerName: "Status", flex: 1 },
-    { field: "date", headerName: "Date", flex: 1 },
+    { field: "date", headerName: "Date", flex: 1, type: "date" },
     { field: "total", headerName: "Total", flex: 1 },
+    { field: "", flex: 1.5, sortable: false },
   ]
 
   const rows = [
