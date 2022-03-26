@@ -51,7 +51,12 @@ const useStyles = makeStyles(theme => ({
   starBackground: {
     height: "3rem",
     backgroundColor: theme.palette.primary.light,
+  },
+  cursorOnHover: {
     cursor: "pointer",
+  },
+  mainContainer: {
+    marginBottom: "3rem",
   },
   // something: {},
   // something: {},
@@ -64,7 +69,7 @@ function ProductReview({ product, review }) {
   const ratingRef = useRef(null)
   const [tempRating, setTempRating] = useState(0)
   const [loading, setLoading] = useState(null)
-  const [rating, setRating] = useState(null)
+  const [rating, setRating] = useState(review ? review.rating : null)
   const [values, setValues] = useState({
     message: "",
   })
@@ -114,12 +119,17 @@ function ProductReview({ product, review }) {
   }
 
   return (
-    <Grid item container direction="column">
+    <Grid
+      item
+      container
+      direction="column"
+      classes={{ root: classes.mainContainer }}
+    >
       <Grid item container justify="space-between">
         {/*  name here... */}
         <Grid item>
           <Typography variant="h4" classes={{ root: classes.light }}>
-            {user.username}
+            {review ? review.user.username : user.username}
           </Typography>
         </Grid>
 
@@ -127,9 +137,15 @@ function ProductReview({ product, review }) {
         <Grid
           item
           ref={ratingRef}
-          classes={{ root: classes.starBackground }}
-          onClick={() => setRating(tempRating)}
+          classes={{
+            root: clsx(classes.starBackground, {
+              [classes.cursorOnHover]: !review,
+            }),
+          }}
+          onClick={() => (review ? null : setRating(tempRating))}
           onMouseMove={e => {
+            if (review) return
+
             //   * -5 to get a positive number
             const hoverRating =
               ((ratingRef.current.getBoundingClientRect().left - e.clientX) /
@@ -162,48 +178,58 @@ function ProductReview({ product, review }) {
           variant="h5"
           classes={{ root: clsx(classes.light, classes.date) }}
         >
-          {dayjs().to(dayjs("1990-01-01"))}
+          {review
+            ? dayjs().to(dayjs(review.createdAt))
+            : dayjs().to(dayjs("1990-01-01"))}
 
           <span className={classes.smallDate}>
-            {` (${dayjs("1990-01-01").format("Do MMM YYYY")})`}
+            {review
+              ? ` (${dayjs(review.createdAt).format("Do MMM YYYY")})`
+              : ` (${dayjs("1990-01-01").format("Do MMM YYYY")})`}
           </span>
         </Typography>
       </Grid>
 
       {/* comment form here... */}
       <Grid item>
-        <Form
-          values={values}
-          setValues={setValues}
-          fields={fields}
-          fullWidth
-          noError
-        />
+        {review ? (
+          <Typography variant="body1">{review.text}</Typography>
+        ) : (
+          <Form
+            values={values}
+            setValues={setValues}
+            fields={fields}
+            fullWidth
+            noError
+          />
+        )}
       </Grid>
 
       {/* buttons here... */}
-      <Grid item container classes={{ root: classes.buttonContainer }}>
-        <Grid item>
-          {loading === "Leave Review" ? (
-            <CircularProgress />
-          ) : (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleReview}
-              disabled={!rating}
-            >
-              <span className={classes.reviewButtonText}>Leave Review</span>
-            </Button>
-          )}
-        </Grid>
+      {review ? null : (
+        <Grid item container classes={{ root: classes.buttonContainer }}>
+          <Grid item>
+            {loading === "Leave Review" ? (
+              <CircularProgress />
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleReview}
+                disabled={!rating}
+              >
+                <span className={classes.reviewButtonText}>Leave Review</span>
+              </Button>
+            )}
+          </Grid>
 
-        <Grid item>
-          <Button>
-            <span className={classes.cancelButtonText}>Cancel</span>
-          </Button>
+          <Grid item>
+            <Button>
+              <span className={classes.cancelButtonText}>Cancel</span>
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </Grid>
   )
 }
