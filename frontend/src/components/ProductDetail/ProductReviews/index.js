@@ -50,6 +50,7 @@ function ProductReviews({ product, editComment, setEditComment }) {
           setEditComment={setEditComment}
           reviews={reviews}
           user={user}
+          setReviews={setReviews}
         />
       )}
       {reviews

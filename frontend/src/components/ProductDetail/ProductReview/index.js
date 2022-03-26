@@ -61,7 +61,14 @@ const useStyles = makeStyles(theme => ({
   // something: {},
 }))
 
-function ProductReview({ product, review, reviews, setEditComment, user }) {
+function ProductReview({
+  product,
+  review,
+  reviews,
+  setReviews,
+  setEditComment,
+  user,
+}) {
   const classes = useStyles()
   const existingReview = !review
     ? reviews.find(review => review.user.username === user.username)
@@ -86,26 +93,38 @@ function ProductReview({ product, review, reviews, setEditComment, user }) {
   const handleReview = () => {
     setLoading("Leave Review")
 
-    axios
-      .post(
-        `${process.env.GATSBY_STRAPI_URL}/reviews`,
-        {
-          text: values.message,
-          rating,
-          product,
+    const axiosFunctions = existingReview ? axios.put : axios.post
+    const route = existingReview ? `/reviews/${existingReview.id}` : `/reviews`
+    const successText = existingReview ? "Review updated" : "Review submitted"
+
+    axiosFunctions(
+      `${process.env.GATSBY_STRAPI_URL}${route}`,
+      {
+        text: values.message,
+        rating,
+        product,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${user.jwt}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${user.jwt}`,
-          },
-        }
-      )
+      }
+    )
       .then(response => {
         setLoading(null)
 
         dispatchFeedback(
-          setSnackbar({ status: "success", message: "Review submitted" })
+          setSnackbar({ status: "success", message: successText })
         )
+
+        if (existingReview) {
+          const newReviews = [...reviews]
+          const reviewIndex = newReviews.indexOf(existingReview)
+
+          newReviews[reviewIndex] = response.data
+          setReviews(newReviews)
+          setEditComment(false)
+        }
       })
       .catch(error => {
         setLoading(null)
@@ -185,11 +204,11 @@ function ProductReview({ product, review, reviews, setEditComment, user }) {
           variant="h5"
           classes={{ root: clsx(classes.light, classes.date) }}
         >
-          {review ? dayjs().to(dayjs(review.createdAt)) : null}
+          {review ? dayjs().to(dayjs(review.updatedAt)) : null}
 
           <span className={classes.smallDate}>
             {review
-              ? ` (${dayjs(review.createdAt).format("Do MMM YYYY")})`
+              ? ` (${dayjs(review.updatedAt).format("Do MMM YYYY")})`
               : null}
           </span>
         </Typography>
