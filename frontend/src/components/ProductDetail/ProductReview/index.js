@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
   // something: {},
 }))
 
-function ProductReview({ product }) {
+function ProductReview({ product, review }) {
   const classes = useStyles()
   const { user } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
