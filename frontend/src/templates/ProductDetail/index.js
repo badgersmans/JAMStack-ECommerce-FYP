@@ -16,6 +16,7 @@ function ProductDetail({
   const [selectedImage, setSelectedImage] = useState(0)
   const [editComment, setEditComment] = useState(false)
   const [stock, setStock] = useState(null)
+  const [rating, setRating] = useState(0)
   const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
 
   const params = new URLSearchParams(window.location.search)
@@ -30,6 +31,7 @@ function ProductDetail({
       setStock(-1)
     } else if (data) {
       setStock(data.product.product_variants)
+      setRating(data.product.averageRating)
     }
   }, [error, data])
   // console.log(data)
@@ -83,6 +85,7 @@ function ProductDetail({
             setSelectedVariant={setSelectedVariant}
             stock={stock}
             setEditComment={setEditComment}
+            rating={rating}
           />
 
           <ProductImages

@@ -125,6 +125,7 @@ function ProductInfo({
   setSelectedVariant,
   stock,
   setEditComment,
+  rating,
 }) {
   const classes = useStyles()
   const [selectedSize, setSelectedSize] = useState(
@@ -253,7 +254,7 @@ function ProductInfo({
               </Grid>
 
               <Grid item>
-                <Rating number={3.5} />
+                <Rating number={rating} />
               </Grid>
 
               <Grid item>
