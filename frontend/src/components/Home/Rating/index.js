@@ -6,14 +6,16 @@ import emptyStar from "../../../images/empty-star.svg"
 
 const useStyles = makeStyles(theme => ({
   size: {
-    height: "2rem",
-    width: "2rem",
+    height: ({ size }) => `${size || 2}rem`,
+    width: ({ size }) => `${size || 2}rem`,
   },
 }))
 
-function Rating({ number }) {
-  const classes = useStyles()
+function Rating({ number, size }) {
+  const classes = useStyles({ size })
   const diff = 5 - Math.ceil(number)
+  // console.log(`number? ->`, number)
+  // console.log(`diff? ->`, diff)
 
   return (
     <>
@@ -31,6 +33,7 @@ function Rating({ number }) {
       {
         // half star
         number % 1 !== 0 ? (
+          // !== 0 will be true for any odd number (3.3 mod 1 = 0.3)
           <img src={halfStar} alt="half star" className={classes.size} />
         ) : null
       }

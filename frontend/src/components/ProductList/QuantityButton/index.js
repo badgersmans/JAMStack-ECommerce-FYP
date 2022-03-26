@@ -97,7 +97,7 @@ function QuantityButton({ stock, variants, selectedVariant, name, isCart }) {
       return null
     }
     // quantity must be at least 1
-    if (quantity === 1 && direction === "down") {
+    if (quantity <= 1 && direction === "down") {
       return null
     }
     // otherwise it is an acceptable value

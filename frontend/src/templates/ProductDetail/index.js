@@ -4,6 +4,7 @@ import Layout from "../../components/ui/layout"
 import Grid from "@material-ui/core/Grid"
 import ProductImages from "../../components/ProductDetail/ProductImages"
 import ProductInfo from "../../components/ProductDetail/ProductInfo"
+import ProductReviews from "../../components/ProductDetail/ProductReviews"
 import RecentlyViewed from "../../components/ProductDetail/RecentlyViewed"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
 import { GET_DETAILS } from "../../apollo/queries"
@@ -93,6 +94,8 @@ function ProductDetail({
         <RecentlyViewed
           products={JSON.parse(window.localStorage.getItem("recentlyViewed"))}
         />
+
+        <ProductReviews />
       </Grid>
     </Layout>
   )
