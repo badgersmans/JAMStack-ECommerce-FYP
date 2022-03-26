@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import clsx from "clsx"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
@@ -8,6 +8,8 @@ import Chip from "@material-ui/core/Chip"
 import { useStaticQuery, graphql } from "gatsby"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
 import { makeStyles } from "@material-ui/core/styles"
+import { useQuery } from "@apollo/client"
+import { GET_DETAILS } from "../../../apollo/queries"
 
 import featuredAdornment from "../../../images/featured-adornment.svg"
 import frame from "../../../images/product-frame-grid.svg"
@@ -132,6 +134,7 @@ function FeaturedProducts() {
       classes={{ root: classes.background }}
     >
       {data.allStrapiProductVariant.edges.map(({ node }, i) => {
+        const [rating, setRating] = useState(0)
         const alignment = matchesMD
           ? "center"
           : i === 0 || i === 3
@@ -139,6 +142,17 @@ function FeaturedProducts() {
           : i === 1 || i === 4
           ? "center"
           : "flex-start"
+
+        const { data } = useQuery(GET_DETAILS, {
+          variables: { id: node.strapiId },
+        })
+
+        useEffect(() => {
+          if (data) {
+            setRating(data.product.averageRating)
+          }
+        }, [data])
+
         return (
           <Grid
             item
@@ -179,7 +193,7 @@ function FeaturedProducts() {
                 <Typography variant="h4">
                   {node.product.name.split(" ")[0]}
                 </Typography>
-                <Rating number={4.5} />
+                <Rating number={rating} />
               </Grid>
               <Grid item>
                 <Chip
