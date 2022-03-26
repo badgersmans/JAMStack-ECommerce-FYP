@@ -72,6 +72,7 @@ function ListOfProducts({
     const [selectedSize, setSelectedSize] = useState(null)
     const [selectedColor, setSelectedColor] = useState(null)
     const [selectedVariant, setSelectedVariant] = useState(null)
+    const [rating, setRating] = useState(0)
     const [stock, setStock] = useState(null)
 
     const { loading, error, data } = useQuery(GET_DETAILS, {
@@ -83,6 +84,7 @@ function ListOfProducts({
         setStock(-1)
       } else if (data) {
         setStock(data.product.product_variants)
+        setRating(data.product.averageRating)
       }
     }, [error, data])
 
@@ -129,6 +131,7 @@ function ListOfProducts({
         setSelectedColor={setSelectedColor}
         hasStyles={hasStyles}
         stock={stock}
+        rating={rating}
       />
     )
   }

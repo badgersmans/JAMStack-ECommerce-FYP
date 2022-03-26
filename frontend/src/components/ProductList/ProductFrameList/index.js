@@ -73,6 +73,7 @@ function ProductFrameList({
   setSelectedColor,
   hasStyles,
   stock,
+  rating,
 }) {
   const classes = useStyles()
   const imageIndex = colorIndex(product, variant, selectedColor)
@@ -154,7 +155,7 @@ function ProductFrameList({
           </Grid>
 
           <Grid item>
-            <Rating number={3.5} />
+            <Rating number={rating} />
           </Grid>
 
           <Grid item classes={{ root: classes.chipContainer }}>

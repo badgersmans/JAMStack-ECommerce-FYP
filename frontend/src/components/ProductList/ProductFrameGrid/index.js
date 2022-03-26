@@ -95,6 +95,7 @@ function ProductFrameGrid({
   disableQuickView,
   small,
   stock,
+  rating,
 }) {
   const classes = useStyles({ small })
   const [open, setOpen] = useState(false)
@@ -162,6 +163,7 @@ function ProductFrameGrid({
         hasStyles={hasStyles}
         stock={stock}
         imageIndex={imageIndex}
+        rating={rating}
       />
     </Grid>
   )
