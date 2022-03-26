@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
+import Pagination from "@material-ui/lab/Pagination"
+import PaginationItem from "@material-ui/lab/PaginationItem"
 import { makeStyles } from "@material-ui/core/styles"
 import { useQuery } from "@apollo/client"
 import { UserContext } from "../../../contexts"
@@ -11,7 +13,19 @@ const useStyles = makeStyles(theme => ({
   reviews: {
     padding: "0 3rem",
   },
-  // something: {},
+  pagination: {
+    marginBottom: "3rem",
+  },
+  "@global": {
+    ".MuiPaginationItem-root": {
+      fontFamily: "Montserrat",
+      fontSize: "2rem",
+      color: theme.palette.primary.main,
+      "&.Mui-selected": {
+        color: theme.palette.common.WHITE,
+      },
+    },
+  },
   // something: {},
   // something: {},
   // something: {},
@@ -27,6 +41,7 @@ function ProductReviews({ product, editComment, setEditComment }) {
 
   const { data } = useQuery(GET_REVIEWS, { variables: { id: product } })
   const [reviews, setReviews] = useState([])
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
     if (data) {
@@ -35,6 +50,9 @@ function ProductReviews({ product, editComment, setEditComment }) {
     }
   }, [data])
   console.log(`reviews? ->`, reviews)
+
+  const reviewsPerPage = 2
+  const numberOfPages = Math.ceil(reviews.length / reviewsPerPage)
 
   return (
     <Grid
@@ -57,6 +75,10 @@ function ProductReviews({ product, editComment, setEditComment }) {
         .filter(review =>
           editComment ? review.user.username !== user.username : review
         )
+        // if page = 1, then 1 - 1 = 0 then 0 * reviewsPerPage (1 in this case) = 0
+        // so start slicing at 0 index, then page (1) * reviewsPerPage (1) = 1 means to end the slice at 1 index
+        // therefore displaying 1 per page
+        .slice((page - 1) * reviewsPerPage, page * reviewsPerPage)
         .map(review => (
           <ProductReview
             product={product}
@@ -65,6 +87,18 @@ function ProductReviews({ product, editComment, setEditComment }) {
             reviews={reviews}
           />
         ))}
+
+      <Grid item container justify="center">
+        <Grid item>
+          <Pagination
+            classes={{ root: classes.pagination }}
+            count={numberOfPages}
+            page={page}
+            onChange={(e, newPage) => setPage(newPage)}
+            color="primary"
+          />
+        </Grid>
+      </Grid>
     </Grid>
   )
 }
