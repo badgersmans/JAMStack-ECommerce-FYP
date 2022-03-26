@@ -62,16 +62,21 @@ const useStyles = makeStyles(theme => ({
   // something: {},
 }))
 
-function ProductReview({ product, review, setEditComment }) {
+function ProductReview({ product, review, reviews, setEditComment }) {
   const classes = useStyles()
   const { user } = useContext(UserContext)
+  const existingReview = !review
+    ? reviews.find(review => review.user.username === user.username)
+    : null
   const { dispatchFeedback } = useContext(FeedbackContext)
   const ratingRef = useRef(null)
   const [tempRating, setTempRating] = useState(0)
   const [loading, setLoading] = useState(null)
-  const [rating, setRating] = useState(review ? review.rating : null)
+  const [rating, setRating] = useState(
+    review ? review.rating : existingReview ? existingReview.rating : null
+  )
   const [values, setValues] = useState({
-    message: "",
+    message: existingReview ? existingReview.text : "",
   })
   const fields = {
     message: {
@@ -117,6 +122,10 @@ function ProductReview({ product, review, setEditComment }) {
         )
       })
   }
+
+  const disableButton = existingReview
+    ? existingReview.text === values.message && existingReview.rating === rating
+    : !rating
 
   return (
     <Grid
@@ -216,7 +225,7 @@ function ProductReview({ product, review, setEditComment }) {
                 variant="contained"
                 color="primary"
                 onClick={handleReview}
-                disabled={!rating}
+                disabled={!rating || disableButton}
               >
                 <span className={classes.reviewButtonText}>Leave Review</span>
               </Button>

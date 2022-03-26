@@ -42,10 +42,19 @@ function ProductReviews({ product, editComment, setEditComment }) {
       id="reviews"
     >
       {editComment && (
-        <ProductReview product={product} setEditComment={setEditComment} />
+        <ProductReview
+          product={product}
+          setEditComment={setEditComment}
+          reviews={reviews}
+        />
       )}
       {reviews.map(review => (
-        <ProductReview product={product} key={review.id} review={review} />
+        <ProductReview
+          product={product}
+          key={review.id}
+          review={review}
+          reviews={reviews}
+        />
       ))}
     </Grid>
   )
