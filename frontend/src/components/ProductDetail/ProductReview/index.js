@@ -24,9 +24,27 @@ const useStyles = makeStyles(theme => ({
   date: {
     marginTop: "-0.5rem",
   },
-  // something: {},
-  // something: {},
-  // something: {},
+  "@global": {
+    ".MuiInput-underline:before, .MuiInput-underline:hover:not(.Mui-disabled):before": {
+      borderBottom: `2px solid ${theme.palette.primary.main}`,
+    },
+    ".MuiInput-underline:after": {
+      borderBottom: `2px solid ${theme.palette.secondary.main}`,
+    },
+  },
+  reviewButtonText: {
+    color: theme.palette.common.WHITE,
+    fontFamily: "Montserrat",
+    fontWeight: 600,
+  },
+  cancelButtonText: {
+    color: theme.palette.primary.main,
+    fontFamily: "Montserrat",
+    fontWeight: 600,
+  },
+  buttonContainer: {
+    marginTop: "2rem",
+  },
   // something: {},
   // something: {},
   // something: {},
@@ -35,6 +53,15 @@ const useStyles = makeStyles(theme => ({
 function ProductReview() {
   const classes = useStyles()
   const { user } = useContext(UserContext)
+  const [values, setValues] = useState({
+    message: "",
+  })
+  const fields = {
+    message: {
+      helperText: "",
+      placeholder: "Write your review",
+    },
+  }
 
   return (
     <Grid item container direction="column">
@@ -52,6 +79,7 @@ function ProductReview() {
         </Grid>
       </Grid>
 
+      {/* date here... */}
       <Grid item>
         <Typography
           variant="h5"
@@ -63,6 +91,32 @@ function ProductReview() {
             {` (${dayjs("1990-01-01").format("Do MMM YYYY")})`}
           </span>
         </Typography>
+      </Grid>
+
+      {/* comment form here... */}
+      <Grid item>
+        <Form
+          values={values}
+          setValues={setValues}
+          fields={fields}
+          fullWidth
+          noError
+        />
+      </Grid>
+
+      {/* buttons here... */}
+      <Grid item container classes={{ root: classes.buttonContainer }}>
+        <Grid item>
+          <Button variant="contained" color="primary">
+            <span className={classes.reviewButtonText}>Leave Review</span>
+          </Button>
+        </Grid>
+
+        <Grid item>
+          <Button>
+            <span className={classes.cancelButtonText}>Cancel</span>
+          </Button>
+        </Grid>
       </Grid>
     </Grid>
   )
