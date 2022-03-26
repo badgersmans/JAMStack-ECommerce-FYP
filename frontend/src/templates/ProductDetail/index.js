@@ -14,6 +14,7 @@ function ProductDetail({
 }) {
   const [selectedVariant, setSelectedVariant] = useState(0)
   const [selectedImage, setSelectedImage] = useState(0)
+  const [editComment, setEditComment] = useState(false)
   const [stock, setStock] = useState(null)
   const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
 
@@ -81,6 +82,7 @@ function ProductDetail({
             selectedVariant={selectedVariant}
             setSelectedVariant={setSelectedVariant}
             stock={stock}
+            setEditComment={setEditComment}
           />
 
           <ProductImages
@@ -95,7 +97,11 @@ function ProductDetail({
           products={JSON.parse(window.localStorage.getItem("recentlyViewed"))}
         />
 
-        <ProductReviews product={id} />
+        <ProductReviews
+          product={id}
+          editComment={editComment}
+          setEditComment={setEditComment}
+        />
       </Grid>
     </Layout>
   )

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import Chip from "@material-ui/core/Chip"
@@ -7,6 +7,8 @@ import { makeStyles } from "@material-ui/core/styles"
 import clsx from "clsx"
 import Rating from "../../Home/Rating"
 import formatMoney from "../../../../utils/formatMoney"
+import { UserContext, FeedbackContext } from "../../../contexts"
+import { setSnackbar } from "../../../contexts/actions/feedback-actions"
 import Sizes from "../../ProductList/Sizes"
 import Swatches from "../../ProductList/Swatches"
 import QuantityButton from "../../ProductList/QuantityButton"
@@ -122,6 +124,7 @@ function ProductInfo({
   selectedVariant,
   setSelectedVariant,
   stock,
+  setEditComment,
 }) {
   const classes = useStyles()
   const [selectedSize, setSelectedSize] = useState(
@@ -135,6 +138,8 @@ function ProductInfo({
     productVariants[selectedVariant],
     selectedColor
   )
+  const { user } = useContext(UserContext)
+  const { dispatchFeedback } = useContext(FeedbackContext)
 
   useEffect(() => {
     setSelectedColor(null)
@@ -173,6 +178,22 @@ function ProductInfo({
     }
   })
   // console.log(selectedVariant)
+
+  const handleEditComment = () => {
+    if (user.username === "Guest") {
+      dispatchFeedback(
+        setSnackbar({
+          status: "error",
+          message: "You must be logged in to leave a review",
+        })
+      )
+      return
+    }
+
+    setEditComment(true)
+    const reviewRef = document.getElementById("reviews")
+    reviewRef.scrollIntoView({ behavior: "smooth" })
+  }
 
   return (
     <Grid
@@ -236,7 +257,7 @@ function ProductInfo({
               </Grid>
 
               <Grid item>
-                <Button>
+                <Button onClick={handleEditComment}>
                   <Typography
                     variant="body2"
                     classes={{ root: classes.reviewButton }}

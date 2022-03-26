@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   // something: {},
 }))
 
-function ProductReviews({ product }) {
+function ProductReviews({ product, editComment, setEditComment }) {
   const classes = useStyles()
   const { data } = useQuery(GET_REVIEWS, { variables: { id: product } })
   const [reviews, setReviews] = useState([])
@@ -34,7 +34,16 @@ function ProductReviews({ product }) {
   console.log(`reviews? ->`, reviews)
 
   return (
-    <Grid item container direction="column" classes={{ root: classes.reviews }}>
+    <Grid
+      item
+      container
+      direction="column"
+      classes={{ root: classes.reviews }}
+      id="reviews"
+    >
+      {editComment && (
+        <ProductReview product={product} setEditComment={setEditComment} />
+      )}
       {reviews.map(review => (
         <ProductReview product={product} key={review.id} review={review} />
       ))}
