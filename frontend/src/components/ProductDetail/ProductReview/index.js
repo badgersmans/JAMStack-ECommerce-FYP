@@ -8,8 +8,7 @@ import CircularProgress from "@material-ui/core/CircularProgress"
 import { makeStyles } from "@material-ui/core/styles"
 import Rating from "../../Home/Rating"
 import Form from "../../Account/auth/Form"
-import { UserContext, FeedbackContext } from "../../../contexts"
-import { setUser } from "../../../contexts/actions/user-actions"
+import { FeedbackContext } from "../../../contexts"
 import { setSnackbar } from "../../../contexts/actions/feedback-actions"
 import dayjs from "dayjs"
 let advancedFormat = require("dayjs/plugin/advancedFormat")
@@ -62,9 +61,8 @@ const useStyles = makeStyles(theme => ({
   // something: {},
 }))
 
-function ProductReview({ product, review, reviews, setEditComment }) {
+function ProductReview({ product, review, reviews, setEditComment, user }) {
   const classes = useStyles()
-  const { user } = useContext(UserContext)
   const existingReview = !review
     ? reviews.find(review => review.user.username === user.username)
     : null
@@ -187,14 +185,12 @@ function ProductReview({ product, review, reviews, setEditComment }) {
           variant="h5"
           classes={{ root: clsx(classes.light, classes.date) }}
         >
-          {review
-            ? dayjs().to(dayjs(review.createdAt))
-            : dayjs().to(dayjs("1990-01-01"))}
+          {review ? dayjs().to(dayjs(review.createdAt)) : null}
 
           <span className={classes.smallDate}>
             {review
               ? ` (${dayjs(review.createdAt).format("Do MMM YYYY")})`
-              : ` (${dayjs("1990-01-01").format("Do MMM YYYY")})`}
+              : null}
           </span>
         </Typography>
       </Grid>
@@ -227,7 +223,9 @@ function ProductReview({ product, review, reviews, setEditComment }) {
                 onClick={handleReview}
                 disabled={!rating || disableButton}
               >
-                <span className={classes.reviewButtonText}>Leave Review</span>
+                <span className={classes.reviewButtonText}>
+                  {existingReview ? "Edit" : "Leave"} Review
+                </span>
               </Button>
             )}
           </Grid>

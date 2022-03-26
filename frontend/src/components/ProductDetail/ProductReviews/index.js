@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/core/styles"
 import { useQuery } from "@apollo/client"
+import { UserContext } from "../../../contexts"
 import ProductReview from "../ProductReview"
 import { GET_REVIEWS } from "../../../apollo/queries"
 
@@ -22,6 +23,8 @@ const useStyles = makeStyles(theme => ({
 
 function ProductReviews({ product, editComment, setEditComment }) {
   const classes = useStyles()
+  const { user } = useContext(UserContext)
+
   const { data } = useQuery(GET_REVIEWS, { variables: { id: product } })
   const [reviews, setReviews] = useState([])
 
@@ -46,16 +49,21 @@ function ProductReviews({ product, editComment, setEditComment }) {
           product={product}
           setEditComment={setEditComment}
           reviews={reviews}
+          user={user}
         />
       )}
-      {reviews.map(review => (
-        <ProductReview
-          product={product}
-          key={review.id}
-          review={review}
-          reviews={reviews}
-        />
-      ))}
+      {reviews
+        .filter(review =>
+          editComment ? review.user.username !== user.username : review
+        )
+        .map(review => (
+          <ProductReview
+            product={product}
+            key={review.id}
+            review={review}
+            reviews={reviews}
+          />
+        ))}
     </Grid>
   )
 }
