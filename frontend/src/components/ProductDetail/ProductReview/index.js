@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 600,
   },
   buttonContainer: {
-    marginTop: "2rem",
+    marginTop: "1rem",
   },
   starBackground: {
     height: "3rem",
@@ -57,7 +57,13 @@ const useStyles = makeStyles(theme => ({
   mainContainer: {
     marginBottom: "3rem",
   },
-  // something: {},
+  delete: {
+    backgroundColor: theme.palette.error.main,
+    "&:hover": {
+      backgroundColor: theme.palette.error.dark,
+    },
+    marginLeft: "1rem",
+  },
   // something: {},
 }))
 
@@ -90,12 +96,25 @@ function ProductReview({
     },
   }
 
-  const handleReview = () => {
-    setLoading("Leave Review")
+  const handleReview = option => {
+    setLoading(option === "delete" ? "Delete Review" : "Leave Review")
 
-    const axiosFunctions = existingReview ? axios.put : axios.post
-    const route = existingReview ? `/reviews/${existingReview.id}` : `/reviews`
-    const successText = existingReview ? "Review updated" : "Review submitted"
+    const axiosFunctions =
+      option === "delete"
+        ? axios.delete
+        : existingReview
+        ? axios.put
+        : axios.post
+    const route =
+      existingReview || option === "delete"
+        ? `/reviews/${existingReview.id}`
+        : `/reviews`
+    const axiosResponseText =
+      option === "delete"
+        ? "Review Deleted"
+        : existingReview
+        ? "Review updated"
+        : "Review submitted"
 
     axiosFunctions(
       `${process.env.GATSBY_STRAPI_URL}${route}`,
@@ -114,14 +133,21 @@ function ProductReview({
         setLoading(null)
 
         dispatchFeedback(
-          setSnackbar({ status: "success", message: successText })
+          setSnackbar({ status: "success", message: axiosResponseText })
         )
 
+        // setReviews(response.data)
+        // setEditComment(false)
+
         if (existingReview) {
-          const newReviews = [...reviews]
+          let newReviews = [...reviews]
           const reviewIndex = newReviews.indexOf(existingReview)
 
-          newReviews[reviewIndex] = response.data
+          if (option === "delete") {
+            newReviews = newReviews.filter(review => review !== existingReview)
+          } else {
+            newReviews[reviewIndex] = response.data
+          }
           setReviews(newReviews)
           setEditComment(false)
         }
@@ -133,8 +159,9 @@ function ProductReview({
         dispatchFeedback(
           setSnackbar({
             status: "error",
-            message:
-              "There was a problem leaving your review, please try again.",
+            message: `There was a problem ${
+              option === "delete" ? "deleting" : "leaving"
+            } your review, please try again.`,
           })
         )
       })
@@ -248,6 +275,22 @@ function ProductReview({
               </Button>
             )}
           </Grid>
+
+          {existingReview ? (
+            <Grid item>
+              {loading === "Delete Review" ? (
+                <CircularProgress />
+              ) : (
+                <Button
+                  variant="contained"
+                  classes={{ root: classes.delete }}
+                  onClick={() => handleReview("delete")}
+                >
+                  <span className={classes.reviewButtonText}>Delete</span>
+                </Button>
+              )}
+            </Grid>
+          ) : null}
 
           <Grid item>
             <Button onClick={() => setEditComment(false)}>
