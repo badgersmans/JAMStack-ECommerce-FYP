@@ -48,6 +48,7 @@ const useStyles = makeStyles(theme => ({
   starBackground: {
     height: "3rem",
     backgroundColor: theme.palette.primary.light,
+    cursor: "pointer",
   },
   // something: {},
   // something: {},
@@ -58,6 +59,7 @@ function ProductReview() {
   const { user } = useContext(UserContext)
   const ratingRef = useRef(null)
   const [tempRating, setTempRating] = useState(0)
+  const [rating, setRating] = useState(null)
   const [values, setValues] = useState({
     message: "",
   })
@@ -83,6 +85,7 @@ function ProductReview() {
           item
           ref={ratingRef}
           classes={{ root: classes.starBackground }}
+          onClick={() => setRating(tempRating)}
           onMouseMove={e => {
             //   * -5 to get a positive number
             const hoverRating =
@@ -95,8 +98,18 @@ function ProductReview() {
             // console.log(Math.round(hoverRating * 2) / 2)
             setTempRating(Math.round(hoverRating * 2) / 2)
           }}
+          onMouseLeave={() => {
+            //   this is so that the stars reset when mouse leaves
+            if (tempRating > rating) {
+              setTempRating(rating)
+            }
+          }}
         >
-          <Rating number={tempRating} size={2.5} />
+          {/* use whichever number is larger for the rating */}
+          <Rating
+            number={rating > tempRating ? rating : tempRating}
+            size={2.5}
+          />
         </Grid>
       </Grid>
 
