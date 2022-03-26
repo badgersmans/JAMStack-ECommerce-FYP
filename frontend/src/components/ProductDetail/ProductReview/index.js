@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useRef, useContext } from "react"
 import Grid from "@material-ui/core/Grid"
 import clsx from "clsx"
 import Typography from "@material-ui/core/Typography"
@@ -53,6 +53,7 @@ const useStyles = makeStyles(theme => ({
 function ProductReview() {
   const classes = useStyles()
   const { user } = useContext(UserContext)
+  const ratingRef = useRef(null)
   const [values, setValues] = useState({
     message: "",
   })
@@ -74,7 +75,14 @@ function ProductReview() {
         </Grid>
 
         {/* star rating here... */}
-        <Grid item>
+        <Grid
+          item
+          ref={ratingRef}
+          onMouseMove={e => {
+            const hoverRating =
+              ratingRef.current.getBoundingClientRect().left - e.clientX
+          }}
+        >
           <Rating number={0} size={2.5} />
         </Grid>
       </Grid>
