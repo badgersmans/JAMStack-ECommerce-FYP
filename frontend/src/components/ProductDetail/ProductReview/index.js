@@ -116,17 +116,20 @@ function ProductReview({
         ? "Review updated"
         : "Review submitted"
 
+    const auth = {
+      Authorization: `Bearer ${user.jwt}`,
+    }
+
     axiosFunctions(
       `${process.env.GATSBY_STRAPI_URL}${route}`,
       {
         text: values.message,
         rating,
         product,
+        headers: option === "delete" ? auth : undefined,
       },
       {
-        headers: {
-          Authorization: `Bearer ${user.jwt}`,
-        },
+        headers: auth,
       }
     )
       .then(response => {
@@ -139,18 +142,19 @@ function ProductReview({
         // setReviews(response.data)
         // setEditComment(false)
 
-        if (existingReview) {
-          let newReviews = [...reviews]
-          const reviewIndex = newReviews.indexOf(existingReview)
+        let newReviews = [...reviews]
+        const reviewIndex = newReviews.indexOf(existingReview)
 
-          if (option === "delete") {
-            newReviews = newReviews.filter(review => review !== existingReview)
-          } else {
-            newReviews[reviewIndex] = response.data
-          }
-          setReviews(newReviews)
-          setEditComment(false)
+        if (option === "delete") {
+          newReviews = newReviews.filter(review => review !== existingReview)
+        } else if (existingReview) {
+          newReviews[reviewIndex] = response.data
+        } else {
+          // otherwise it is a new review
+          newReviews = [response.data, ...newReviews]
         }
+        setReviews(newReviews)
+        setEditComment(false)
       })
       .catch(error => {
         setLoading(null)

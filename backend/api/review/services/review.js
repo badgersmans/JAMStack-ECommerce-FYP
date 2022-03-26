@@ -15,7 +15,11 @@ module.exports = {
     );
     console.log(`total? ->`, total);
 
-    const average = total / product.reviews.length;
+    let average = total / product.reviews.length;
+
+    if (product.reviews.length === 0) {
+      average = 0;
+    }
     console.log(`average? ->`, average);
 
     await strapi.services.product.update(
