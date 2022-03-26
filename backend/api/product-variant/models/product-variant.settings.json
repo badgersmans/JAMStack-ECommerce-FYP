@@ -31,8 +31,8 @@
       "required": true
     },
     "product": {
-      "model": "product",
-      "via": "product_variants"
+      "via": "product_variants",
+      "model": "product"
     },
     "size": {
       "type": "enumeration",

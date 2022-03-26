@@ -27,11 +27,18 @@
       "via": "products"
     },
     "product_variants": {
-      "via": "product",
-      "collection": "product-variant"
+      "collection": "product-variant",
+      "via": "product"
     },
     "promo": {
       "type": "boolean"
+    },
+    "reviews": {
+      "collection": "review",
+      "via": "product"
+    },
+    "averageRating": {
+      "type": "decimal"
     }
   }
 }
