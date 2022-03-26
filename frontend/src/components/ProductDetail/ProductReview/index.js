@@ -45,7 +45,10 @@ const useStyles = makeStyles(theme => ({
   buttonContainer: {
     marginTop: "2rem",
   },
-  // something: {},
+  starBackground: {
+    height: "3rem",
+    backgroundColor: theme.palette.primary.light,
+  },
   // something: {},
   // something: {},
 }))
@@ -54,6 +57,7 @@ function ProductReview() {
   const classes = useStyles()
   const { user } = useContext(UserContext)
   const ratingRef = useRef(null)
+  const [tempRating, setTempRating] = useState(0)
   const [values, setValues] = useState({
     message: "",
   })
@@ -78,12 +82,21 @@ function ProductReview() {
         <Grid
           item
           ref={ratingRef}
+          classes={{ root: classes.starBackground }}
           onMouseMove={e => {
+            //   * -5 to get a positive number
             const hoverRating =
-              ratingRef.current.getBoundingClientRect().left - e.clientX
+              ((ratingRef.current.getBoundingClientRect().left - e.clientX) /
+                ratingRef.current.getBoundingClientRect().width) *
+              -5
+
+            //   example we want the closest 0.5 from 2.7 (which is 2.5)
+            // 2.7 * 2 = 5.4 then rounding it would become 5, then divided by 2 would become 2.5
+            // console.log(Math.round(hoverRating * 2) / 2)
+            setTempRating(Math.round(hoverRating * 2) / 2)
           }}
         >
-          <Rating number={0} size={2.5} />
+          <Rating number={tempRating} size={2.5} />
         </Grid>
       </Grid>
 
