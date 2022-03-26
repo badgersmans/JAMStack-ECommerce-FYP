@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useContext } from "react"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
-import Pagination from "@material-ui/lab/Pagination"
-import PaginationItem from "@material-ui/lab/PaginationItem"
 import { makeStyles } from "@material-ui/core/styles"
 import { useQuery } from "@apollo/client"
 import { UserContext } from "../../../contexts"
 import ProductReview from "../ProductReview"
 import { GET_REVIEWS } from "../../../apollo/queries"
+import { StyledPagination } from "../../../templates/ProductList"
 
 const useStyles = makeStyles(theme => ({
   reviews: {
@@ -16,16 +15,7 @@ const useStyles = makeStyles(theme => ({
   pagination: {
     marginBottom: "3rem",
   },
-  "@global": {
-    ".MuiPaginationItem-root": {
-      fontFamily: "Montserrat",
-      fontSize: "2rem",
-      color: theme.palette.primary.main,
-      "&.Mui-selected": {
-        color: theme.palette.common.WHITE,
-      },
-    },
-  },
+
   // something: {},
   // something: {},
   // something: {},
@@ -90,7 +80,7 @@ function ProductReviews({ product, editComment, setEditComment }) {
 
       <Grid item container justify="center">
         <Grid item>
-          <Pagination
+          <StyledPagination
             classes={{ root: classes.pagination }}
             count={numberOfPages}
             page={page}
