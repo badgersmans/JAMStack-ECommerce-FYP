@@ -2,12 +2,15 @@ import React, { useState, useRef, useContext } from "react"
 import Grid from "@material-ui/core/Grid"
 import clsx from "clsx"
 import Typography from "@material-ui/core/Typography"
+import axios from "axios"
 import Button from "@material-ui/core/Button"
+import CircularProgress from "@material-ui/core/CircularProgress"
 import { makeStyles } from "@material-ui/core/styles"
 import Rating from "../../Home/Rating"
 import Form from "../../Account/auth/Form"
-import { UserContext } from "../../../contexts"
+import { UserContext, FeedbackContext } from "../../../contexts"
 import { setUser } from "../../../contexts/actions/user-actions"
+import { setSnackbar } from "../../../contexts/actions/feedback-actions"
 import dayjs from "dayjs"
 let advancedFormat = require("dayjs/plugin/advancedFormat")
 let relativeTime = require("dayjs/plugin/relativeTime")
@@ -54,11 +57,13 @@ const useStyles = makeStyles(theme => ({
   // something: {},
 }))
 
-function ProductReview() {
+function ProductReview({ product }) {
   const classes = useStyles()
   const { user } = useContext(UserContext)
+  const { dispatchFeedback } = useContext(FeedbackContext)
   const ratingRef = useRef(null)
   const [tempRating, setTempRating] = useState(0)
+  const [loading, setLoading] = useState(null)
   const [rating, setRating] = useState(null)
   const [values, setValues] = useState({
     message: "",
@@ -68,6 +73,44 @@ function ProductReview() {
       helperText: "",
       placeholder: "Write your review",
     },
+  }
+
+  const handleReview = () => {
+    setLoading("Leave Review")
+
+    axios
+      .post(
+        `${process.env.GATSBY_STRAPI_URL}/reviews`,
+        {
+          text: values.message,
+          rating,
+          product,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.jwt}`,
+          },
+        }
+      )
+      .then(response => {
+        setLoading(null)
+
+        dispatchFeedback(
+          setSnackbar({ status: "success", message: "Review submitted" })
+        )
+      })
+      .catch(error => {
+        setLoading(null)
+
+        console.error(error)
+        dispatchFeedback(
+          setSnackbar({
+            status: "error",
+            message:
+              "There was a problem leaving your review, please try again.",
+          })
+        )
+      })
   }
 
   return (
@@ -141,9 +184,18 @@ function ProductReview() {
       {/* buttons here... */}
       <Grid item container classes={{ root: classes.buttonContainer }}>
         <Grid item>
-          <Button variant="contained" color="primary">
-            <span className={classes.reviewButtonText}>Leave Review</span>
-          </Button>
+          {loading === "Leave Review" ? (
+            <CircularProgress />
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleReview}
+              disabled={!rating}
+            >
+              <span className={classes.reviewButtonText}>Leave Review</span>
+            </Button>
+          )}
         </Grid>
 
         <Grid item>

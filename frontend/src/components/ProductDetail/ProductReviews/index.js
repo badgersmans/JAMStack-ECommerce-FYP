@@ -18,11 +18,11 @@ const useStyles = makeStyles(theme => ({
   // something: {},
 }))
 
-function ProductReviews() {
+function ProductReviews({ product }) {
   const classes = useStyles()
   return (
     <Grid item container direction="column" classes={{ root: classes.reviews }}>
-      <ProductReview />
+      <ProductReview product={product} />
     </Grid>
   )
 }
