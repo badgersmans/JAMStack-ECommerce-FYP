@@ -89,6 +89,27 @@ function Register({
 
   const handleSuccessfulRegistration = () => {
     setLoading(true)
+    // axios
+    //   .get(
+    //     `https://block-temporary-email.com/check/email/prfum6+amngg0jys85u0@sharklasers.com`,
+    //     {
+    //       headers: {
+    //         "x-api-key": process.env.GATSBY_DISPOSABLE_EMAIL_KEY,
+    //       },
+    //     }
+    //   )
+    //   .then(response => {
+    //     setLoading(false)
+    //     console.log(response)
+
+    //     return
+    //   })
+    //   .catch(error => {
+    //     setLoading(false)
+    //     console.error(error)
+    //     return
+    //   })
+
     axios
       .post(`${process.env.GATSBY_STRAPI_URL}/auth/local/register`, {
         username: values.name,
