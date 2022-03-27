@@ -75,6 +75,7 @@ function CartItem({ item }) {
   const handleDelete = () => {
     dispatchCart(removeFromCart(item.variant, item.quantity))
   }
+  // console.log(item)
 
   const actions = [
     {
@@ -83,6 +84,7 @@ function CartItem({ item }) {
         color: theme.palette.secondary.main,
         size: matchesXS ? 1.8 : 2.8,
         customizeStyles: classes.actionButton,
+        productVariant: item.variant.id,
       },
     },
     { icon: SubscriptionIcon, color: theme.palette.secondary.main },

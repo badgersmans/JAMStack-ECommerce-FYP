@@ -9,8 +9,8 @@
     "timestamps": true
   },
   "attributes": {
-    "product": {
-      "model": "product"
+    "product_variant": {
+      "model": "product-variant"
     },
     "user": {
       "plugin": "users-permissions",
