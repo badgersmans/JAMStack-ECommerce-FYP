@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useContext } from "react"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
+import IconButton from "@material-ui/core/IconButton"
+import CircularProgress from "@material-ui/core/CircularProgress"
 import Chip from "@material-ui/core/Chip"
 import Button from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/core/styles"
 import clsx from "clsx"
+import axios from "axios"
 import Rating from "../../Home/Rating"
 import formatMoney from "../../../../utils/formatMoney"
 import { UserContext, FeedbackContext } from "../../../contexts"
@@ -49,9 +52,9 @@ const useStyles = makeStyles(theme => ({
     marginBottom: "2rem",
   },
   icon: {
-    height: "4rem",
-    width: "4rem",
-    margin: "0.5rem 0.8rem",
+    height: "2.8rem",
+    width: "2.8rem",
+    margin: "1.1rem 0.8rem",
   },
   sectionContainer: {
     height: "calc(100% / 3)",
@@ -96,6 +99,18 @@ const useStyles = makeStyles(theme => ({
   actionsContainer: {
     padding: "0 1rem",
   },
+  iconButton: {
+    padding: 0,
+    "&:hover": {
+      backgroundColor: "transparent",
+    },
+  },
+  // iconButton: {},
+  // iconButton: {},
+  // iconButton: {},
+  // iconButton: {},
+  // iconButton: {},
+  // iconButton: {},
 }))
 
 export const getStockDisplay = (stock, variant) => {
@@ -126,12 +141,14 @@ function ProductInfo({
   stock,
   setEditComment,
   rating,
+  product,
 }) {
   const classes = useStyles()
   const [selectedSize, setSelectedSize] = useState(
     productVariants[selectedVariant].size
   )
   const [selectedColor, setSelectedColor] = useState(null)
+  const [loading, setLoading] = useState(false)
   const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
 
   const imageIndex = colorIndex(
@@ -196,6 +213,52 @@ function ProductInfo({
     reviewRef.scrollIntoView({ behavior: "smooth" })
   }
 
+  const handleFavorite = () => {
+    if (user.username === "Guest") {
+      dispatchFeedback(
+        setSnackbar({
+          status: "error",
+          message: "You must be logged in to favorite",
+        })
+      )
+      return
+    }
+
+    setLoading(true)
+
+    axios
+      .post(
+        `${process.env.GATSBY_STRAPI_URL}/favorites`,
+        {
+          product,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.jwt}`,
+          },
+        }
+      )
+      .then(response => {
+        setLoading(false)
+        dispatchFeedback(
+          setSnackbar({
+            status: "success",
+            message: "Added to your favorites",
+          })
+        )
+      })
+      .catch(error => {
+        setLoading(false)
+        console.error(error)
+        dispatchFeedback(
+          setSnackbar({
+            status: "error",
+            message: "There was a problem adding to your favorites",
+          })
+        )
+      })
+  }
+
   return (
     <Grid
       item
@@ -209,16 +272,25 @@ function ProductInfo({
       <Grid
         item
         container
-        // justify="flex-end"
+        justify="center"
         // direction="row"
         classes={{ root: classes.background }}
       >
         <Grid item>
-          <img
-            src={favorite}
-            alt="add item to favorite"
-            className={classes.icon}
-          />
+          {loading ? (
+            <CircularProgress size="2.8rem" />
+          ) : (
+            <IconButton
+              classes={{ root: classes.iconButton }}
+              onClick={handleFavorite}
+            >
+              <img
+                src={favorite}
+                alt="add item to favorite"
+                className={classes.icon}
+              />
+            </IconButton>
+          )}
         </Grid>
 
         <Grid item>

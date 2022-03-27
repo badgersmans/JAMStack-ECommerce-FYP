@@ -86,6 +86,7 @@ function ProductDetail({
             stock={stock}
             setEditComment={setEditComment}
             rating={rating}
+            product={id}
           />
 
           <ProductImages
