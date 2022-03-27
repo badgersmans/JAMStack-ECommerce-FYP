@@ -7,6 +7,7 @@ import clsx from "clsx"
 import { makeStyles } from "@material-ui/core/styles"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
 import Button from "@material-ui/core/Button"
+import Hidden from "@material-ui/core/Hidden"
 import formatMoney from "../../../../../utils/formatMoney"
 import OrderDetailItems from "../OrderDetailItems"
 import DayJS from "react-dayjs"
@@ -98,15 +99,17 @@ function OrderDetails({ open, setOpen, orders }) {
       classes={{ paper: classes.drawer }}
       disableBackdropTransition={!iOS}
       disableDiscovery={iOS}
-      anchor={matchesXS ? "bottom" : "right"}
+      anchor={matchesXS ? "bottom" : "left"}
     >
-      <Grid
-        item
-        component={Button}
-        onClick={() => setOpen(null)}
-        classes={{ root: classes.buttonSpacer }}
-        disableRipple
-      />
+      <Hidden smUp>
+        <Grid
+          item
+          component={Button}
+          onClick={() => setOpen(null)}
+          classes={{ root: classes.buttonSpacer }}
+          disableRipple
+        />
+      </Hidden>
       <Grid container direction="column" classes={{ root: classes.light }}>
         <Grid item classes={{ root: classes.dark }}>
           <Typography
