@@ -12,6 +12,7 @@ import Rating from "../../Home/Rating"
 import formatMoney from "../../../../utils/formatMoney"
 import { UserContext, FeedbackContext } from "../../../contexts"
 import { setSnackbar } from "../../../contexts/actions/feedback-actions"
+import { setUser } from "../../../contexts/actions/user-actions"
 import Sizes from "../../ProductList/Sizes"
 import Swatches from "../../ProductList/Swatches"
 import QuantityButton from "../../ProductList/QuantityButton"
@@ -157,7 +158,7 @@ function ProductInfo({
     productVariants[selectedVariant],
     selectedColor
   )
-  const { user } = useContext(UserContext)
+  const { user, dispatchUser } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
 
   useEffect(() => {
@@ -248,13 +249,29 @@ function ProductInfo({
       }
     )
       .then(response => {
+        // console.log(response)
         setLoading(false)
         dispatchFeedback(
           setSnackbar({
             status: "success",
-            message: "Added to your favorites",
+            message: `${
+              existingFaved ? "Deleted from" : "Added to"
+            } your favorites`,
           })
         )
+        let newFavorites = [...user.favorites]
+
+        // delete the faved
+        if (existingFaved) {
+          newFavorites = newFavorites.filter(fav => fav.id !== existingFaved.id)
+        } else {
+          // add to fav
+          newFavorites.push({
+            id: response.data.id,
+            product: response.data.product.id,
+          })
+        }
+        dispatchUser(setUser({ ...user, favorites: newFavorites }))
       })
       .catch(error => {
         setLoading(false)
@@ -262,7 +279,9 @@ function ProductInfo({
         dispatchFeedback(
           setSnackbar({
             status: "error",
-            message: "There was a problem adding to your favorites",
+            message: `There was a problem ${
+              existingFaved ? "deleting from" : "adding to"
+            } your favorites`,
           })
         )
       })
