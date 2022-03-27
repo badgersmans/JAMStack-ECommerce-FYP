@@ -68,4 +68,29 @@ module.exports = {
     );
     ctx.send("Password changed successfully", 200);
   },
+
+  /**
+   * Retrieve authenticated user.
+   * @return {Object|Array}
+   */
+  async me(ctx) {
+    const user = ctx.state.user;
+
+    if (!user) {
+      return ctx.unauthorized();
+    }
+
+    let newUser = { ...sanitizeUser(user) };
+    const favorites = await strapi.services.favorite.find({ user });
+
+    // console.log(favorites);
+
+    // add a favorites property to newUser...
+    newUser.favorites = favorites.map((favorite) => ({
+      product: favorite.product.id,
+      id: favorite.id,
+    }));
+
+    ctx.body = newUser;
+  },
 };
