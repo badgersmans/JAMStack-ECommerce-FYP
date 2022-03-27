@@ -19,6 +19,7 @@ import { colorIndex } from "../../ProductList/ProductFrameGrid"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
 
 import favorite from "../../../images/favorite.svg"
+import Favorite from "../../../images/Favorite"
 import subscription from "../../../images/subscription.svg"
 
 const useStyles = makeStyles(theme => ({
@@ -213,6 +214,8 @@ function ProductInfo({
     reviewRef.scrollIntoView({ behavior: "smooth" })
   }
 
+  const existingFaved = user.favorites?.find(fav => fav.product === product)
+
   const handleFavorite = () => {
     if (user.username === "Guest") {
       dispatchFeedback(
@@ -226,18 +229,24 @@ function ProductInfo({
 
     setLoading(true)
 
-    axios
-      .post(
-        `${process.env.GATSBY_STRAPI_URL}/favorites`,
-        {
-          product,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.jwt}`,
-          },
-        }
-      )
+    const axiosFunctions = existingFaved ? axios.delete : axios.post
+    const routes = existingFaved
+      ? `/favorites/${existingFaved.id}`
+      : `/favorites`
+    const auth = {
+      Authorization: `Bearer ${user.jwt}`,
+    }
+
+    axiosFunctions(
+      `${process.env.GATSBY_STRAPI_URL}${routes}`,
+      {
+        product,
+        headers: existingFaved ? auth : undefined,
+      },
+      {
+        headers: auth,
+      }
+    )
       .then(response => {
         setLoading(false)
         dispatchFeedback(
@@ -284,11 +293,9 @@ function ProductInfo({
               classes={{ root: classes.iconButton }}
               onClick={handleFavorite}
             >
-              <img
-                src={favorite}
-                alt="add item to favorite"
-                className={classes.icon}
-              />
+              <span className={classes.icon}>
+                <Favorite faved={existingFaved} />
+              </span>
             </IconButton>
           )}
         </Grid>
