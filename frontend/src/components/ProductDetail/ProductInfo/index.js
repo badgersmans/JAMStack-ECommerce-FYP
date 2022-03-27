@@ -1,26 +1,21 @@
 import React, { useState, useEffect, useContext } from "react"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
-import IconButton from "@material-ui/core/IconButton"
-import CircularProgress from "@material-ui/core/CircularProgress"
 import Chip from "@material-ui/core/Chip"
 import Button from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/core/styles"
 import clsx from "clsx"
-import axios from "axios"
 import Rating from "../../Home/Rating"
 import formatMoney from "../../../../utils/formatMoney"
 import { UserContext, FeedbackContext } from "../../../contexts"
 import { setSnackbar } from "../../../contexts/actions/feedback-actions"
-import { setUser } from "../../../contexts/actions/user-actions"
 import Sizes from "../../ProductList/Sizes"
 import Swatches from "../../ProductList/Swatches"
 import QuantityButton from "../../ProductList/QuantityButton"
 import { colorIndex } from "../../ProductList/ProductFrameGrid"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
+import Favorite from "../../ui/Favorite"
 
-import favorite from "../../../images/favorite.svg"
-import Favorite from "../../../images/Favorite"
 import subscription from "../../../images/subscription.svg"
 
 const useStyles = makeStyles(theme => ({
@@ -56,6 +51,8 @@ const useStyles = makeStyles(theme => ({
   icon: {
     height: "2.8rem",
     width: "2.8rem",
+  },
+  iconWrapper: {
     margin: "1.1rem 0.8rem",
   },
   sectionContainer: {
@@ -101,12 +98,6 @@ const useStyles = makeStyles(theme => ({
   actionsContainer: {
     padding: "0 1rem",
   },
-  iconButton: {
-    padding: 0,
-    "&:hover": {
-      backgroundColor: "transparent",
-    },
-  },
   // iconButton: {},
   // iconButton: {},
   // iconButton: {},
@@ -120,17 +111,14 @@ export const getStockDisplay = (stock, variant) => {
     case undefined:
     case null:
       return "Loading inventory..."
-      break
     case -1:
       return "Error loading inventory..."
-      break
     default:
       if (stock[variant].quantity === 0) {
         return `Out of stock.`
       } else {
         return `${stock[variant].quantity} currently in stock.`
       }
-      break
   }
 }
 
@@ -150,7 +138,6 @@ function ProductInfo({
     productVariants[selectedVariant].size
   )
   const [selectedColor, setSelectedColor] = useState(null)
-  const [loading, setLoading] = useState(false)
   const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
 
   const imageIndex = colorIndex(
@@ -215,78 +202,6 @@ function ProductInfo({
     reviewRef.scrollIntoView({ behavior: "smooth" })
   }
 
-  const existingFaved = user.favorites?.find(fav => fav.product === product)
-
-  const handleFavorite = () => {
-    if (user.username === "Guest") {
-      dispatchFeedback(
-        setSnackbar({
-          status: "error",
-          message: "You must be logged in to favorite",
-        })
-      )
-      return
-    }
-
-    setLoading(true)
-
-    const axiosFunctions = existingFaved ? axios.delete : axios.post
-    const routes = existingFaved
-      ? `/favorites/${existingFaved.id}`
-      : `/favorites`
-    const auth = {
-      Authorization: `Bearer ${user.jwt}`,
-    }
-
-    axiosFunctions(
-      `${process.env.GATSBY_STRAPI_URL}${routes}`,
-      {
-        product,
-        headers: existingFaved ? auth : undefined,
-      },
-      {
-        headers: auth,
-      }
-    )
-      .then(response => {
-        // console.log(response)
-        setLoading(false)
-        dispatchFeedback(
-          setSnackbar({
-            status: "success",
-            message: `${
-              existingFaved ? "Deleted from" : "Added to"
-            } your favorites`,
-          })
-        )
-        let newFavorites = [...user.favorites]
-
-        // delete the faved
-        if (existingFaved) {
-          newFavorites = newFavorites.filter(fav => fav.id !== existingFaved.id)
-        } else {
-          // add to fav
-          newFavorites.push({
-            id: response.data.id,
-            product: response.data.product.id,
-          })
-        }
-        dispatchUser(setUser({ ...user, favorites: newFavorites }))
-      })
-      .catch(error => {
-        setLoading(false)
-        console.error(error)
-        dispatchFeedback(
-          setSnackbar({
-            status: "error",
-            message: `There was a problem ${
-              existingFaved ? "deleting from" : "adding to"
-            } your favorites`,
-          })
-        )
-      })
-  }
-
   return (
     <Grid
       item
@@ -304,22 +219,11 @@ function ProductInfo({
         // direction="row"
         classes={{ root: classes.background }}
       >
-        <Grid item>
-          {loading ? (
-            <CircularProgress size="2.8rem" />
-          ) : (
-            <IconButton
-              classes={{ root: classes.iconButton }}
-              onClick={handleFavorite}
-            >
-              <span className={classes.icon}>
-                <Favorite faved={existingFaved} />
-              </span>
-            </IconButton>
-          )}
+        <Grid item classes={{ root: classes.iconWrapper }}>
+          <Favorite product={product} />
         </Grid>
 
-        <Grid item>
+        <Grid item classes={{ root: classes.iconWrapper }}>
           <img
             src={subscription}
             alt="add item to subscription"
