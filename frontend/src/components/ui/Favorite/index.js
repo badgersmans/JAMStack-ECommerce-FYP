@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react"
 import axios from "axios"
 import { setUser } from "../../../contexts/actions/user-actions"
+import clsx from "clsx"
 import { UserContext, FeedbackContext } from "../../../contexts"
 import { setSnackbar } from "../../../contexts/actions/feedback-actions"
 import CircularProgress from "@material-ui/core/CircularProgress"
@@ -14,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     width: ({ size }) => `${size || 2.8}rem`,
   },
   iconButton: {
-    padding: 0,
+    padding: ({ noPadding }) => (noPadding ? 0 : undefined),
     "&:hover": {
       backgroundColor: "transparent",
     },
@@ -28,8 +29,8 @@ const useStyles = makeStyles(theme => ({
   // something: {},
 }))
 
-function Favorite({ color, size, product }) {
-  const classes = useStyles({ size })
+function Favorite({ color, size, product, customizeStyles, noPadding }) {
+  const classes = useStyles({ size, noPadding })
   const { user, dispatchUser } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const [loading, setLoading] = useState(false)
@@ -109,7 +110,10 @@ function Favorite({ color, size, product }) {
   if (loading) return <CircularProgress size={`${size || 2.8}rem`} />
 
   return (
-    <IconButton onClick={handleFavorite} classes={{ root: classes.iconButton }}>
+    <IconButton
+      onClick={handleFavorite}
+      classes={{ root: clsx(classes.iconButton, customizeStyles) }}
+    >
       <span className={classes.icon}>
         <FavoriteIcon color={color} faved={existingFaved} />
       </span>

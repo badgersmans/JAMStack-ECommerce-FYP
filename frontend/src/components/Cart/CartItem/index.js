@@ -9,7 +9,7 @@ import QuantityButton from "../../ProductList/QuantityButton"
 import formatMoney from "../../../../utils/formatMoney"
 import { removeFromCart } from "../../../contexts/actions/cart-actions"
 
-import FavoriteIcon from "../../../images/Favorite"
+import Favorite from "../../ui/Favorite"
 import SubscriptionIcon from "../../../images/Subscription"
 import DeleteIcon from "../../../images/Delete"
 import { CartContext } from "../../../contexts"
@@ -31,8 +31,8 @@ const useStyles = makeStyles(theme => ({
     },
   },
   actionWrapper: {
-    height: "3rem",
-    width: "3rem",
+    height: "2.8rem",
+    width: "2.8rem",
     marginBottom: -8,
     [theme.breakpoints.down("xs")]: {
       height: "1.8rem",
@@ -77,7 +77,14 @@ function CartItem({ item }) {
   }
 
   const actions = [
-    { icon: FavoriteIcon, color: theme.palette.secondary.main },
+    {
+      component: Favorite,
+      props: {
+        color: theme.palette.secondary.main,
+        size: matchesXS ? 1.8 : 2.8,
+        customizeStyles: classes.actionButton,
+      },
+    },
     { icon: SubscriptionIcon, color: theme.palette.secondary.main },
     {
       icon: DeleteIcon,
@@ -135,18 +142,22 @@ function CartItem({ item }) {
           <Grid item container sm xs={5} justify="flex-end">
             {actions.map((action, i) => (
               <Grid item key={i}>
-                <IconButton
-                  classes={{ root: classes.actionButton }}
-                  disableRipple
-                  onClick={() => action.onClick()}
-                >
-                  <span
-                    className={classes.actionWrapper}
-                    style={{ height: action.size, width: action.size }}
+                {action.component ? (
+                  <action.component {...action.props} />
+                ) : (
+                  <IconButton
+                    classes={{ root: classes.actionButton }}
+                    disableRipple
+                    onClick={() => action.onClick()}
                   >
-                    <action.icon color={action.color} />
-                  </span>
-                </IconButton>
+                    <span
+                      className={classes.actionWrapper}
+                      style={{ height: action.size, width: action.size }}
+                    >
+                      <action.icon color={action.color} />
+                    </span>
+                  </IconButton>
+                )}
               </Grid>
             ))}
           </Grid>
