@@ -76,6 +76,8 @@ function CartItem({ item }) {
     dispatchCart(removeFromCart(item.variant, item.quantity))
   }
 
+  // console.log(`item ->`, item)
+
   const actions = [
     {
       component: Favorite,
@@ -83,6 +85,7 @@ function CartItem({ item }) {
         color: theme.palette.secondary.main,
         size: matchesXS ? 1.8 : 2.8,
         customizeStyles: classes.actionButton,
+        variant: item.variant.id,
       },
     },
     { icon: SubscriptionIcon, color: theme.palette.secondary.main },

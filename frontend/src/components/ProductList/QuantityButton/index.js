@@ -80,6 +80,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function QuantityButton({ stock, variants, selectedVariant, name, isCart }) {
+  // console.log(`variants`, variants)
   const classes = useStyles({ isCart })
   const [addedToCart, setAddedToCart] = useState(false)
   const { cart, dispatchCart } = useContext(CartContext)

@@ -83,11 +83,11 @@ module.exports = {
     let newUser = { ...sanitizeUser(user) };
     const favorites = await strapi.services.favorite.find({ user });
 
-    // console.log(favorites);
+    console.log(`favorites ->`, favorites);
 
     // add a favorites property to newUser...
     newUser.favorites = favorites.map((favorite) => ({
-      product: favorite.product.id,
+      variant: favorite.variant.id,
       id: favorite.id,
     }));
 

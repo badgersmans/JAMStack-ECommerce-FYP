@@ -133,6 +133,7 @@ function ProductInfo({
   rating,
   product,
 }) {
+  // console.log(`productVariants ->`, productVariants)
   const classes = useStyles()
   const [selectedSize, setSelectedSize] = useState(
     productVariants[selectedVariant].size
@@ -220,7 +221,7 @@ function ProductInfo({
         classes={{ root: classes.background }}
       >
         <Grid item classes={{ root: classes.iconWrapper }}>
-          <Favorite product={product} />
+          <Favorite variant={productVariants[selectedVariant].id} />
         </Grid>
 
         <Grid item classes={{ root: classes.iconWrapper }}>
