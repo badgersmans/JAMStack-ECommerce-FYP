@@ -116,7 +116,7 @@ function PromotionalProducts() {
       }
     }
   `)
-
+  console.log(data)
   let slides = []
 
   data.allStrapiProduct.edges.map(({ node }, i) =>

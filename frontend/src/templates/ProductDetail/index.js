@@ -34,7 +34,7 @@ function ProductDetail({
       setRating(data.product.averageRating)
     }
   }, [error, data])
-  // console.log(data)
+  console.log(error)
 
   useEffect(() => {
     const styledVariant = productVariants.filter(

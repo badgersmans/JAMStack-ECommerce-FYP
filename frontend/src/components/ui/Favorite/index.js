@@ -29,13 +29,16 @@ const useStyles = makeStyles(theme => ({
   // something: {},
 }))
 
-function Favorite({ color, size, product, customizeStyles, noPadding }) {
+function Favorite({ color, size, variant, customizeStyles, noPadding }) {
   const classes = useStyles({ size, noPadding })
   const { user, dispatchUser } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
   const [loading, setLoading] = useState(false)
 
-  const existingFaved = user.favorites?.find(fav => fav.product === product)
+  console.log(`user ->`, user)
+
+  const existingFaved = user.favorites?.find(fav => fav.variant === variant)
+  console.log(`existingFaved ->`, existingFaved)
 
   const handleFavorite = () => {
     if (user.username === "Guest") {
@@ -61,7 +64,7 @@ function Favorite({ color, size, product, customizeStyles, noPadding }) {
     axiosFunctions(
       `${process.env.GATSBY_STRAPI_URL}${routes}`,
       {
-        product,
+        product_variant: variant,
         headers: existingFaved ? auth : undefined,
       },
       {
@@ -69,7 +72,7 @@ function Favorite({ color, size, product, customizeStyles, noPadding }) {
       }
     )
       .then(response => {
-        // console.log(response)
+        console.log(`response ->`, response)
         setLoading(false)
         dispatchFeedback(
           setSnackbar({
@@ -88,7 +91,7 @@ function Favorite({ color, size, product, customizeStyles, noPadding }) {
           // add to fav
           newFavorites.push({
             id: response.data.id,
-            product: response.data.product.id,
+            variant: response.data.product_variant.id,
           })
         }
         dispatchUser(setUser({ ...user, favorites: newFavorites }))

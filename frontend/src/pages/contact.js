@@ -212,7 +212,7 @@ const ContactPage = () => {
       icon: <img src={phone} alt="phone" className={classes.contactIcon} />,
     },
     {
-      label: "SUKD1600666@segi4u.my",
+      label: "example@email.com",
       icon: (
         <div className={classes.contactEmailIcon}>
           <Email color="#FFF" />

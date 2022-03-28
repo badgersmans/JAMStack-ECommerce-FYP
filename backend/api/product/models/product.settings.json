@@ -27,8 +27,8 @@
       "via": "products"
     },
     "product_variants": {
-      "collection": "product-variant",
-      "via": "product"
+      "via": "product",
+      "collection": "product-variant"
     },
     "promo": {
       "type": "boolean"
