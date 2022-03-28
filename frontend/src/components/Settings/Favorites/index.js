@@ -10,9 +10,9 @@ import QuantityButton from "../../ProductList/QuantityButton"
 import Delete from "../../../images/Delete"
 import axios from "axios"
 import { makeStyles } from "@material-ui/core/styles"
-import { DataGrid } from "@material-ui/data-grid"
 import { UserContext, FeedbackContext } from "../../../contexts"
 import { setSnackbar } from "../../../contexts/actions/feedback-actions"
+import SettingsDataGrid from "../SettingsDataGrid"
 
 const useStyles = makeStyles(theme => ({
   mainContainer: {
@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   // something: {},
 }))
 
-function Favorites() {
+function Favorites({ setSelectedSetting }) {
   const classes = useStyles()
   const [products, setProducts] = useState([])
   const [selectedVariants, setSelectedVariants] = useState({})
@@ -213,6 +213,7 @@ function Favorites() {
       field: "",
       width: 500,
       sortable: false,
+      disableColumnMenu: true,
       renderCell: ({ value }) => (
         <IconButton>
           <span className={classes.deleteWrapper}>
@@ -271,11 +272,11 @@ function Favorites() {
   console.log(`products ->`, products)
   return (
     <Grid item container classes={{ root: classes.mainContainer }}>
-      <DataGrid
+      <SettingsDataGrid
         rows={rows}
         columns={columns}
-        pageSize={5}
-        hideFooterSelectedRowCount
+        setSelectedSetting={setSelectedSetting}
+        rowsPerPage={2}
       />
     </Grid>
   )
