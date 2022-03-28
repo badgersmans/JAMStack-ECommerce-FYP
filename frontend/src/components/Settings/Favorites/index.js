@@ -69,6 +69,46 @@ function Favorites() {
 
   const setSelectedHelper = (selectedFunction, existingValues, value, row) => {
     selectedFunction({ ...existingValues, [row]: value })
+
+    // fav.id is the favorite id
+    const { variants } = products.find(fav => fav.id === row)
+    const selectedVariant = selectedVariants[row]
+
+    let newVariant
+
+    // if changing color
+    if (value.includes("#")) {
+      newVariant = variants.find(
+        variant =>
+          variant.size === selectedSizes[row] &&
+          variant.style === variants[selectedVariant].style &&
+          variant.color === value
+      )
+    } else {
+      // changing the size
+      let newColors = []
+
+      variants.map(variant => {
+        // if color not already in list
+        if (
+          !newColors.includes(variant.color) &&
+          variant.size === value &&
+          variants[selectedVariant].style === variant.style
+        ) {
+          newColors.push(variant.color)
+        }
+      })
+      newVariant = variants.find(
+        variant =>
+          variant.size === value &&
+          variant.style === variants[selectedVariant].style &&
+          variant.color === newColors[0]
+      )
+    }
+    setSelectedVariants({
+      ...selectedVariants,
+      [row]: variants.indexOf(newVariant),
+    })
   }
 
   const columns = [
@@ -146,14 +186,20 @@ function Favorites() {
       headerName: "Quantity",
       width: 250,
       sortable: false,
-      renderCell: ({ value }) => (
-        <QuantityButton
-          stock={[{ quantity: value[0].quantity }]}
-          variants={value}
-          selectedVariant={0}
-          name={value[0].product.name.split(" ")[0]}
-        />
-      ),
+      renderCell: ({ value, row }) => {
+        const selectedVariant = selectedVariants[row.id]
+        const stock = value.map(variant => ({
+          quantity: variant.quantity,
+        }))
+        return (
+          <QuantityButton
+            stock={stock}
+            variants={value}
+            selectedVariant={selectedVariant}
+            name={value[selectedVariant].product.name.split(" ")[0]}
+          />
+        )
+      },
     },
     {
       field: "price",
