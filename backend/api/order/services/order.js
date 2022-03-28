@@ -446,7 +446,7 @@ module.exports = {
               <tr>
                 <td data-size="Section Headlines" data-color="Section Headlines" class="Section Headlines" align="center" valign="middle" style="font-family:'Poppins',Arial,Helvetica,sans-serif;color:#FFE487;font-size:16px;line-height:22px;font-weight:400;letter-spacing:0px;padding:0px;padding-bottom:8px; font-weight: 400;">
                    If you have any questions or concerns please contact us at <a href="tel:0123456789" style="color: #FFE487; text-decoration: none;">0123456789</a> or
-email at <a href="mailto:example@email.com" style="color: #FFE487; text-decoration: none;">example@email.com</a>
+email at <a href="mailto:SUKD1600666@segi4u.my" style="color: #FFE487; text-decoration: none;">SUKD1600666@segi4u.my</a>
 
                 </td>
               </tr>

@@ -1,5 +1,5 @@
 export default function validate(values) {
-  // input: values = {field: value, field2: value, ...nFields} example {email: example@email.com, phone: 012 345 6789}
+  // input: values = {field: value, field2: value, ...nFields} example {email: SUKD1600666@segi4u.my, phone: 012 345 6789}
   // output: {field: valid} example {email: true, phone: true}
   // console.log(values)
 

@@ -66,8 +66,8 @@ function Footer() {
   const routes = {
     "Contact Us": [
       { label: "012 345 6789", href: "tel:012 345 6789" },
-      { label: "John Doe" },
-      { label: "example@email.com", href: "mailto:example@email.com" },
+      { label: "Shawn Law Tien Shen" },
+      { label: "SUKD1600666@segi4u.my", href: "mailto:SUKD1600666@segi4u.my" },
       { label: `Copyright © ${currentYear}` },
     ],
     "Customer Service": [
