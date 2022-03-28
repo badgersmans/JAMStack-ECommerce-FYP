@@ -80,7 +80,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function QuantityButton({ stock, variants, selectedVariant, name, isCart }) {
-  // console.log(`variants`, variants)
+  // console.log(`stock`, stock)
   const classes = useStyles({ isCart })
   const [addedToCart, setAddedToCart] = useState(false)
   const { cart, dispatchCart } = useContext(CartContext)
@@ -132,6 +132,9 @@ function QuantityButton({ stock, variants, selectedVariant, name, isCart }) {
     // consider errors
     if (stock === null || stock === -1) {
       return undefined
+    } else if (quantity === 0 && stock[selectedVariant].quantity !== 0) {
+      // counter set to zero but not supposed to be
+      setQuantity(1)
     } else if (quantity > stock[selectedVariant].quantity) {
       // consider changes in selectedVariant
       setQuantity(stock[selectedVariant].quantity)
@@ -186,6 +189,7 @@ function QuantityButton({ stock, variants, selectedVariant, name, isCart }) {
               }),
             }}
             onClick={handleCart}
+            disabled={stock ? stock[selectedVariant].quantity === 0 : true}
             // onClick={() => setAddedToCart(!addedToCart)}
           >
             {addedToCart ? (
