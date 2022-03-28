@@ -133,7 +133,7 @@ function ProductInfo({
   rating,
   product,
 }) {
-  // console.log(`productVariants ->`, productVariants)
+  console.log(`productVariants ->`, productVariants)
   const classes = useStyles()
   const [selectedSize, setSelectedSize] = useState(
     productVariants[selectedVariant].size
@@ -168,6 +168,7 @@ function ProductInfo({
   }, [imageIndex])
 
   const stockDisplay = getStockDisplay(stock, selectedVariant)
+  console.log(stock)
 
   const sizes = []
   const colors = []

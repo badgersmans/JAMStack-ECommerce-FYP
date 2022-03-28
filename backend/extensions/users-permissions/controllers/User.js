@@ -87,7 +87,7 @@ module.exports = {
 
     // add a favorites property to newUser...
     newUser.favorites = favorites.map((favorite) => ({
-      variant: favorite.variant.id,
+      variant: favorite.product_variant.id,
       id: favorite.id,
     }));
 
