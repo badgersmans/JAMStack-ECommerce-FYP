@@ -6,8 +6,8 @@ module.exports = ({ env }) => ({
     },
     settings: {
       defaultMessageStream: "fyp-emails",
-      defaultFrom: "example@email.com",
-      defaultTo: "example@email.com",
+      defaultFrom: "SUKD1600666@segi4u.my",
+      defaultTo: "SUKD1600666@segi4u.my",
       // defaultReplyTo: "code@ijs.to",
       // defaultVariables: {
       //   sentBy: 'strapi',
