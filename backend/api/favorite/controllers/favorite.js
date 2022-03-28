@@ -52,7 +52,7 @@ module.exports = {
           delete variant.created_by;
         });
 
-        favs[i].variant = variants;
+        favs[i].variants = variants;
         delete favs[i].user;
         delete favs[i].updated_by;
         delete favs[i].created_by;
