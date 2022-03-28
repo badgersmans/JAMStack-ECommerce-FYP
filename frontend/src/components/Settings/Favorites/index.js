@@ -52,17 +52,20 @@ function Favorites() {
   // console.log(user.favorites)
 
   const createRows = data =>
-    data.map(item => ({
-      item: {
-        name: item.variants[0].product.name.split(" ")[0],
-        image: item.variants[0].images[0].url,
-      },
-      variant: { all: item.variants, current: item.product_variant },
-      quantity: item.variants,
-      price: item.variants[0].price,
-      // id is the favorite id
-      id: item.id,
-    }))
+    data.map(item => {
+      const selectedVariant = selectedVariants[item.id]
+      return {
+        item: {
+          name: item.variants[selectedVariant].product.name.split(" ")[0],
+          image: item.variants[selectedVariant].images[0].url,
+        },
+        variant: { all: item.variants, current: item.product_variant },
+        quantity: item.variants,
+        price: item.variants[selectedVariant].price,
+        // id is the favorite id
+        id: item.id,
+      }
+    })
 
   const setSelectedHelper = (selectedFunction, existingValues, value, row) => {
     selectedFunction({ ...existingValues, [row]: value })
@@ -185,6 +188,25 @@ function Favorites() {
       })
       .then(response => {
         setProducts(response.data)
+
+        let newVariants = {}
+        let newSizes = {}
+        let newColors = {}
+
+        response.data.forEach(fav => {
+          const found = fav.variants.find(
+            variant => variant.id === fav.product_variant.id
+          )
+
+          const index = fav.variants.indexOf(found)
+
+          newVariants = { ...newVariants, [fav.id]: index }
+          newSizes = { ...newSizes, [fav.id]: fav.product_variant.size }
+          newColors = { ...newColors, [fav.id]: fav.product_variant.color }
+        })
+        setSelectedVariants(newVariants)
+        setSelectedSizes(newSizes)
+        setSelectedColors(newColors)
       })
       .catch(error => {
         console.error(error)
@@ -198,7 +220,8 @@ function Favorites() {
       })
   }, [])
 
-  const rows = createRows(products)
+  const rows =
+    Object.keys(selectedVariants).length > 0 ? createRows(products) : []
   console.log(`products ->`, products)
   return (
     <Grid item container classes={{ root: classes.mainContainer }}>
