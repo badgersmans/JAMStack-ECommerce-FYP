@@ -44,6 +44,9 @@ const useStyles = makeStyles(theme => ({
 function Favorites() {
   const classes = useStyles()
   const [products, setProducts] = useState([])
+  const [selectedVariants, setSelectedVariants] = useState({})
+  const [selectedSizes, setSelectedSizes] = useState({})
+  const [selectedColors, setSelectedColors] = useState({})
   const { user } = useContext(UserContext)
   const { dispatchFeedback } = useContext(FeedbackContext)
   // console.log(user.favorites)
@@ -60,6 +63,10 @@ function Favorites() {
       // id is the favorite id
       id: item.id,
     }))
+
+  const setSelectedHelper = (selectedFunction, existingValues, value, row) => {
+    selectedFunction({ ...existingValues, [row]: value })
+  }
 
   const columns = [
     {
@@ -89,18 +96,61 @@ function Favorites() {
       headerName: "Variant",
       width: 275,
       sortable: false,
-      renderCell: ({ value }) => (
-        <Grid container direction="column">
-          {value.current.id}
-        </Grid>
-      ),
+      renderCell: ({ value, row }) => {
+        let sizes = []
+        let colors = []
+
+        value.all.map(variant => {
+          sizes.push(variant.size)
+
+          // if color not already on the list
+          if (
+            !colors.includes(variant.color) &&
+            variant.size === selectedSizes[row.id] &&
+            variant.style === value.current.style
+          ) {
+            colors.push(variant.color)
+          }
+        })
+
+        return (
+          <Grid container direction="column">
+            <Sizes
+              sizes={sizes}
+              selectedSize={selectedSizes[row.id]}
+              setSelectedSize={size =>
+                setSelectedHelper(setSelectedSizes, selectedSizes, size, row.id)
+              }
+            />
+            <Swatches
+              colors={colors}
+              selectedColor={selectedColors[row.id]}
+              setSelectedColor={color =>
+                setSelectedHelper(
+                  setSelectedColors,
+                  selectedColors,
+                  color,
+                  row.id
+                )
+              }
+            />
+          </Grid>
+        )
+      },
     },
     {
       field: "quantity",
       headerName: "Quantity",
       width: 250,
       sortable: false,
-      renderCell: ({ value }) => <div>{value.id}</div>,
+      renderCell: ({ value }) => (
+        <QuantityButton
+          stock={[{ quantity: value[0].quantity }]}
+          variants={value}
+          selectedVariant={0}
+          name={value[0].product.name.split(" ")[0]}
+        />
+      ),
     },
     {
       field: "price",
@@ -123,6 +173,8 @@ function Favorites() {
       ),
     },
   ]
+
+  console.log(selectedSizes)
 
   useEffect(() => {
     axios
