@@ -222,7 +222,7 @@ function ProductInfo({
         classes={{ root: classes.background }}
       >
         <Grid item classes={{ root: classes.iconWrapper }}>
-          <Favorite variant={productVariants[selectedVariant].id} />
+          <Favorite variant={productVariants[selectedVariant].id} noPadding />
         </Grid>
 
         <Grid item classes={{ root: classes.iconWrapper }}>
