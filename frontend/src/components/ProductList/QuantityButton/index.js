@@ -93,6 +93,7 @@ function QuantityButton({
   white,
   round,
   hideCartButton,
+  override,
 }) {
   // console.log(`stock`, stock)
   const classes = useStyles({ white, round })
@@ -102,9 +103,21 @@ function QuantityButton({
   const existingCartItem = isCart
     ? cart.find(item => item.variant === variants[selectedVariant])
     : null
-  const [quantity, setQuantity] = useState(
+  const [quantity, setQuantityState] = useState(
     isCart ? existingCartItem.quantity : 1
   )
+
+  let setQuantity
+
+  if (override) {
+    setQuantity = value => {
+      console.log(`value ->`, value)
+      override.setValue(value)
+      setQuantityState(value)
+    }
+  } else {
+    setQuantity = setQuantityState
+  }
 
   const handleChange = direction => {
     // don't go above the database value

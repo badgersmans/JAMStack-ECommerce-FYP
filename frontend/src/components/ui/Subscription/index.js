@@ -10,7 +10,9 @@ import IconButton from "@material-ui/core/IconButton"
 import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/core/styles"
 import QuantityButton from "../../ProductList/QuantityButton"
-import { CartContext } from "../../../contexts"
+import { CartContext, FeedbackContext } from "../../../contexts"
+import { addToCart } from "../../../contexts/actions/cart-actions"
+import { setSnackbar } from "../../../contexts/actions/feedback-actions"
 import SubscriptionIcon from "../../../images/Subscription"
 
 const useStyles = makeStyles(theme => ({
@@ -69,10 +71,13 @@ const useStyles = makeStyles(theme => ({
   // something: {},
 }))
 
-function Subscription({ size, round, stock, selectedVariant }) {
+function Subscription({ size, round, stock, name, variant, selectedVariant }) {
   const classes = useStyles({ size })
   const [open, setOpen] = useState(false)
+  const [quantity, setQuantity] = useState(1)
   const [frequency, setFrequency] = useState("Month")
+  const { dispatchFeedback } = useContext(FeedbackContext)
+  const { dispatchCart } = useContext(CartContext)
 
   const frequencies = [
     "One Week",
@@ -83,6 +88,23 @@ function Subscription({ size, round, stock, selectedVariant }) {
     "Six Months",
     "Yearly",
   ]
+
+  const handleCart = () => {
+    dispatchCart(
+      addToCart(
+        variant,
+        quantity,
+        name,
+        stock[selectedVariant].quantity,
+        frequency
+      )
+    )
+
+    setOpen(false)
+    dispatchFeedback(
+      setSnackbar({ status: "success", message: "Subscription added to cart" })
+    )
+  }
   return (
     <>
       <IconButton
@@ -120,6 +142,7 @@ function Subscription({ size, round, stock, selectedVariant }) {
                 white
                 hideCartButton
                 round
+                override={{ value: quantity, setValue: setQuantity }}
               />
             </Grid>
           </Grid>
@@ -171,6 +194,7 @@ function Subscription({ size, round, stock, selectedVariant }) {
             <Button
               variant="contained"
               color="secondary"
+              onClick={handleCart}
               classes={{ root: classes.cartButton }}
             >
               <Typography variant="h1" classes={{ root: classes.cartText }}>

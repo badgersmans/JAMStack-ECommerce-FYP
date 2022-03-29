@@ -5,9 +5,9 @@ import {
 } from "../constants/action-types"
 
 // action creators
-export const addToCart = (variant, quantity, name, stock) => ({
+export const addToCart = (variant, quantity, name, stock, subscription) => ({
   type: ADD_TO_CART,
-  payload: { variant, quantity, name, stock },
+  payload: { variant, quantity, name, stock, subscription },
 })
 
 export const removeFromCart = (variant, quantity) => ({
