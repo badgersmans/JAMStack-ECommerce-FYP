@@ -18,6 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
   row: {
     height: "4rem",
+    padding: "0 0.5rem",
   },
   dark: {
     backgroundColor: theme.palette.secondary.main,
@@ -46,7 +47,7 @@ const useStyles = makeStyles(theme => ({
   // something: {},
 }))
 
-function Subscription({ size }) {
+function Subscription({ size, round, stock, selectedVariant }) {
   const classes = useStyles({ size })
   const [open, setOpen] = useState(false)
   return (
@@ -73,9 +74,20 @@ function Subscription({ size }) {
             container
             justify="space-between"
             classes={{ root: clsx(classes.row, classes.dark) }}
+            alignItems="center"
           >
             <Grid item>
               <Typography variant="h4">Quantity</Typography>
+            </Grid>
+
+            <Grid item>
+              <QuantityButton
+                stock={stock}
+                selectedVariant={selectedVariant}
+                white
+                hideCartButton
+                round
+              />
             </Grid>
           </Grid>
 

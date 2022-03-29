@@ -127,6 +127,8 @@ function CartItem({ item }) {
               variants={[item.variant]}
               stock={[{ quantity: item.stock }]}
               isCart
+              white
+              hideCartButton
             />
           </Grid>
         </Grid>

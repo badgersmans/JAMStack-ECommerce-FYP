@@ -225,7 +225,7 @@ function ProductInfo({
         </Grid>
 
         <Grid item classes={{ root: classes.iconWrapper }}>
-          <Subscription />
+          <Subscription stock={stock} selectedVariant={selectedVariant} />
         </Grid>
       </Grid>
 

@@ -16,8 +16,8 @@ import Cart from "../../../images/Cart"
 
 const useStyles = makeStyles(theme => ({
   quantityText: {
-    color: ({ isCart }) =>
-      isCart ? theme.palette.secondary.main : theme.palette.common.WHITE,
+    color: ({ white }) =>
+      white ? theme.palette.secondary.main : theme.palette.common.WHITE,
   },
   mainGroup: {
     height: "3rem",
@@ -25,20 +25,25 @@ const useStyles = makeStyles(theme => ({
   editButtons: {
     height: "1.525rem",
     borderRadius: 0,
-    backgroundColor: ({ isCart }) =>
-      isCart ? theme.palette.common.WHITE : theme.palette.secondary.main,
-    borderLeft: ({ isCart }) =>
+    backgroundColor: ({ white }) =>
+      white ? theme.palette.common.WHITE : theme.palette.secondary.main,
+    borderLeft: ({ white }) =>
       `2px solid ${
-        isCart ? theme.palette.secondary.main : theme.palette.common.WHITE
+        white ? theme.palette.secondary.main : theme.palette.common.WHITE
       }`,
-    borderRight: "2px solid #FFF",
+    borderRight: ({ round }) => (round ? 0 : "2px solid #FFF"),
     borderBottom: "none",
     borderTop: "none",
+    borderRadius: ({ round }) => (round ? "0px 50px 50px 0px" : 0),
+    "&:hover": {
+      backgroundColor: ({ white }) =>
+        white ? theme.palette.common.WHITE : theme.palette.secondary.light,
+    },
   },
   endButtons: {
     borderRadius: 50,
-    backgroundColor: ({ isCart }) =>
-      isCart ? theme.palette.common.WHITE : theme.palette.secondary.main,
+    backgroundColor: ({ white }) =>
+      white ? theme.palette.common.WHITE : theme.palette.secondary.main,
     border: "none",
   },
   cartButton: {
@@ -46,9 +51,9 @@ const useStyles = makeStyles(theme => ({
     transition: "background-color 1s ease",
   },
   minusButton: {
-    borderTop: ({ isCart }) =>
+    borderTop: ({ white }) =>
       `2px solid ${
-        isCart ? theme.palette.secondary.main : theme.palette.common.WHITE
+        white ? theme.palette.secondary.main : theme.palette.common.WHITE
       }`,
   },
   minus: {
@@ -56,8 +61,8 @@ const useStyles = makeStyles(theme => ({
   },
   quantity: {
     "&:hover": {
-      backgroundColor: ({ isCart }) =>
-        isCart ? theme.palette.common.WHITE : theme.palette.secondary.main,
+      backgroundColor: ({ white }) =>
+        white ? theme.palette.common.WHITE : theme.palette.secondary.main,
     },
   },
   badge: {
@@ -79,15 +84,24 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-function QuantityButton({ stock, variants, selectedVariant, name, isCart }) {
+function QuantityButton({
+  stock,
+  variants,
+  selectedVariant,
+  name,
+  isCart,
+  white,
+  round,
+  hideCartButton,
+}) {
   // console.log(`stock`, stock)
-  const classes = useStyles({ isCart })
+  const classes = useStyles({ white, round })
   const [addedToCart, setAddedToCart] = useState(false)
   const { cart, dispatchCart } = useContext(CartContext)
 
-  const existingCartItem = cart.find(
-    item => item.variant === variants[selectedVariant]
-  )
+  const existingCartItem = isCart
+    ? cart.find(item => item.variant === variants[selectedVariant])
+    : null
   const [quantity, setQuantity] = useState(
     isCart ? existingCartItem.quantity : 1
   )
@@ -181,7 +195,7 @@ function QuantityButton({ stock, variants, selectedVariant, name, isCart }) {
           </Button>
         </ButtonGroup>
 
-        {isCart ? null : (
+        {hideCartButton ? null : (
           <Button
             classes={{
               root: clsx(classes.endButtons, classes.cartButton, {
