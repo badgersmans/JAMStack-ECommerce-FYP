@@ -11,7 +11,7 @@ import IconButton from "@material-ui/core/IconButton"
 import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/core/styles"
 import QuantityButton from "../../ProductList/QuantityButton"
-import { CartContext, FeedbackContext } from "../../../contexts"
+import { CartContext, FeedbackContext, UserContext } from "../../../contexts"
 import { addToCart } from "../../../contexts/actions/cart-actions"
 import { setSnackbar } from "../../../contexts/actions/feedback-actions"
 import SubscriptionIcon from "../../../images/Subscription"
@@ -96,6 +96,7 @@ function Subscription({ size, round, stock, name, variant, selectedVariant }) {
   const [frequency, setFrequency] = useState("Month")
   const { dispatchFeedback } = useContext(FeedbackContext)
   const { dispatchCart } = useContext(CartContext)
+  const { user } = useContext(UserContext)
   const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
 
   const frequencies = [
@@ -124,10 +125,24 @@ function Subscription({ size, round, stock, name, variant, selectedVariant }) {
       setSnackbar({ status: "success", message: "Subscription added to cart" })
     )
   }
+
+  const handleOpen = () => {
+    if (user.username === "Guest") {
+      dispatchFeedback(
+        setSnackbar({
+          status: "error",
+          message: "You must be logged in to perform this action",
+        })
+      )
+      return
+    } else {
+      setOpen(true)
+    }
+  }
   return (
     <>
       <IconButton
-        onClick={() => setOpen(true)}
+        onClick={() => setOpen(handleOpen)}
         classes={{ root: classes.iconButton }}
       >
         <span className={classes.iconWrapper}>
@@ -217,6 +232,7 @@ function Subscription({ size, round, stock, name, variant, selectedVariant }) {
               color="secondary"
               onClick={handleCart}
               classes={{ root: classes.cartButton }}
+              disabled={quantity === 0}
             >
               <Typography variant="h1" classes={{ root: classes.cartText }}>
                 Confirm Subscription

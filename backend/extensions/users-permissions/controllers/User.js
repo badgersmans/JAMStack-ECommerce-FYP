@@ -82,6 +82,7 @@ module.exports = {
 
     let newUser = { ...sanitizeUser(user) };
     const favorites = await strapi.services.favorite.find({ user });
+    const subscriptions = await strapi.services.subscription.find({ user });
 
     console.log(`favorites ->`, favorites);
 
@@ -90,6 +91,12 @@ module.exports = {
       variant: favorite.product_variant.id,
       id: favorite.id,
     }));
+
+    // add the subscriptions property...
+    newUser.subscriptions = subscriptions.map((subscription) => {
+      delete subscription.user;
+      return subscription;
+    });
 
     ctx.body = newUser;
   },

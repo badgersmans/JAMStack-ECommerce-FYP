@@ -44,6 +44,7 @@ function Settings({ setSelectedSetting }) {
   const [detailErrors, setDetailErrors] = useState({})
   const [locationErrors, setLocationErrors] = useState({})
   const [paymentInfoSlot, setPaymentInfoSlot] = useState(0)
+  const hasActiveSubscription = user.subscriptions.length > 0
 
   const allErrors = { ...detailErrors, ...locationErrors }
   const hasError = Object.keys(allErrors).some(
@@ -114,6 +115,7 @@ function Settings({ setSelectedSetting }) {
             edit={edit}
             slot={paymentInfoSlot}
             setSlot={setPaymentInfoSlot}
+            hasActiveSubscription={hasActiveSubscription}
           />
         </Elements>
       </Grid>
