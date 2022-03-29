@@ -5,6 +5,8 @@
  * to customize this controller
  */
 
+const dayjs = require("dayjs");
+
 const { sanitizeEntity } = require("strapi-utils");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const GUEST_ID = "623413aeb5add55cc452bf11";
@@ -13,6 +15,58 @@ const sanitizeUser = (user) =>
   sanitizeEntity(user, {
     model: strapi.query("user", "users-permissions").model,
   });
+
+const frequencies = [
+  {
+    label: "Week",
+    value: "one_week",
+    delivery: () => {
+      return dayjs().add(1, "week").format();
+    },
+  },
+  {
+    label: "Two Weeks",
+    value: "two_weeks",
+    delivery: () => {
+      return dayjs().add(2, "week").format();
+    },
+  },
+  {
+    label: "Three Weeks",
+    value: "three_weeks",
+    delivery: () => {
+      return dayjs().add(3, "week").format();
+    },
+  },
+  {
+    label: "Month",
+    value: "one_month",
+    delivery: () => {
+      return dayjs().add(1, "month").format();
+    },
+  },
+  {
+    label: "Three Months",
+    value: "three_months",
+    delivery: () => {
+      return dayjs().add(3, "month").format();
+    },
+  },
+  {
+    label: "Six Months",
+    value: "six_months",
+    delivery: () => {
+      return dayjs().add(6, "month").format();
+    },
+  },
+  {
+    label: "Year",
+    value: "yearly",
+    delivery: () => {
+      return dayjs().add(1, "year").format();
+    },
+  },
+];
 
 module.exports = {
   async process(ctx) {
@@ -148,6 +202,26 @@ module.exports = {
         const serverItem = await strapi.services["product-variant"].findOne({
           id: clientItem.variant.id,
         });
+
+        if (clientItem.subscription) {
+          const frequency = frequencies.find(
+            (option) => option.label === clientItem.subscription
+          );
+          await strapi.services.subscription.create({
+            user: customerOrder,
+            product_variant: clientItem.variant.id,
+            productName: clientItem.name,
+            frequency: frequency.value,
+            last_delivery: dayjs().format(),
+            next_delivery: frequency.delivery(),
+            quantity: clientItem.quantity,
+            paymentMethod,
+            shippingAddress,
+            billingAddress,
+            shippingInfo,
+            billingInfo,
+          });
+        }
 
         // minus the stock quantity
         await strapi.services["product-variant"].update(
