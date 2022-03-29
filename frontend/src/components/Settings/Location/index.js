@@ -42,9 +42,10 @@ const useStyles = makeStyles(theme => ({
       isCheckout && selectedStep !== stepNumber ? "none" : "flex",
     position: "relative",
     [theme.breakpoints.down("md")]: {
+      height: ({ isCheckout }) => (!isCheckout ? "30rem" : "100%"),
       borderBottom: `4px solid ${theme.palette.common.WHITE}`,
-      height: "30rem",
     },
+    height: "100%",
   },
   switchContainer: {
     marginRight: 4,

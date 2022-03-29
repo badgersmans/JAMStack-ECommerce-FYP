@@ -71,9 +71,10 @@ const useStyles = makeStyles(theme => ({
     borderLeft: ({ isCheckout }) =>
       isCheckout ? undefined : `4px solid ${theme.palette.common.WHITE}`,
     [theme.breakpoints.down("md")]: {
+      height: ({ isCheckout }) => (!isCheckout ? "30rem" : "100%"),
       borderLeft: 0,
-      height: "30rem",
     },
+    height: "100%",
   },
   slotsContainer: {
     position: "absolute",
