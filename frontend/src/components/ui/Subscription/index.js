@@ -5,6 +5,7 @@ import Select from "@material-ui/core/Select"
 import MenuItem from "@material-ui/core/MenuItem"
 import Chip from "@material-ui/core/Chip"
 import Button from "@material-ui/core/Button"
+import useMediaQuery from "@material-ui/core/useMediaQuery"
 import clsx from "clsx"
 import IconButton from "@material-ui/core/IconButton"
 import Typography from "@material-ui/core/Typography"
@@ -23,6 +24,9 @@ const useStyles = makeStyles(theme => ({
   row: {
     height: "4rem",
     padding: "0 0.5rem",
+    [theme.breakpoints.down("xs")]: {
+      height: "auto",
+    },
   },
   dark: {
     backgroundColor: theme.palette.secondary.main,
@@ -37,13 +41,25 @@ const useStyles = makeStyles(theme => ({
     height: "8rem",
     width: "100%",
     borderRadius: 0,
+    [theme.breakpoints.down("xs")]: {
+      height: "auto",
+    },
   },
   cartText: {
     color: theme.palette.common.WHITE,
     fontSize: "4rem",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "3rem",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "2rem",
+    },
   },
   dialog: {
     borderRadius: 0,
+    [theme.breakpoints.down("xs")]: {
+      backgroundColor: theme.palette.primary.main,
+    },
   },
   chipRoot: {
     backgroundColor: theme.palette.common.WHITE,
@@ -78,6 +94,7 @@ function Subscription({ size, round, stock, name, variant, selectedVariant }) {
   const [frequency, setFrequency] = useState("Month")
   const { dispatchFeedback } = useContext(FeedbackContext)
   const { dispatchCart } = useContext(CartContext)
+  const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
 
   const frequencies = [
     "One Week",
@@ -120,16 +137,17 @@ function Subscription({ size, round, stock, name, variant, selectedVariant }) {
         open={open}
         onClose={() => setOpen(false)}
         fullWidth
+        fullScreen={matchesXS}
         maxWidth="md"
         classes={{ paper: classes.dialog }}
       >
-        <Grid container direction="column">
+        <Grid container direction="column" alignItems="center">
           <Grid
             item
             container
             justify="space-between"
-            classes={{ root: clsx(classes.row, classes.dark) }}
             alignItems="center"
+            classes={{ root: clsx(classes.row, classes.dark) }}
           >
             <Grid item>
               <Typography variant="h4">Quantity</Typography>
@@ -152,6 +170,7 @@ function Subscription({ size, round, stock, name, variant, selectedVariant }) {
             container
             justify="space-between"
             alignItems="center"
+            direction={matchesXS ? "column" : "row"}
             classes={{ root: clsx(classes.row, classes.light) }}
           >
             <Grid item>
@@ -202,6 +221,14 @@ function Subscription({ size, round, stock, name, variant, selectedVariant }) {
               </Typography>
             </Button>
           </Grid>
+
+          {matchesXS && (
+            <Grid item>
+              <Button onClick={() => setOpen(false)}>
+                <Typography variant="body2">Cancel</Typography>
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Dialog>
     </>
