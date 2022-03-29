@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import Grid from "@material-ui/core/Grid"
 import { makeStyles } from "@material-ui/core/styles"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
@@ -13,6 +13,7 @@ import PaymentInfo from "../../Settings/PaymentInfo"
 import validate from "../../../../utils/validator"
 import { Elements } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
+import { CartContext } from "../../../contexts"
 
 const useStyles = makeStyles(theme => ({
   stepsContainer: {
@@ -79,7 +80,7 @@ function CheckoutContainer({ user }) {
   const [locationSlot, setLocationSlot] = useState(0)
   const [selectedShipping, setSelectedShipping] = useState(null)
   const [cardSlot, setCardSlot] = useState(0)
-  const [saveCard, setSaveCard] = useState(false)
+  const [saveCard, setSaveCard] = useState(cartHasSubscription)
   const [order, setOrder] = useState(null)
   const [card, setCard] = useState({ brand: "", last4: "" })
   const [cardError, setCardError] = useState(true)
@@ -88,6 +89,10 @@ function CheckoutContainer({ user }) {
     { label: "2-DAY SHIPPING", price: 5 },
     { label: "OVERNIGHT SHIPPING", price: 50 },
   ]
+  const { cart } = useContext(CartContext)
+
+  const cartHasSubscription = cart.some(item => item.subscription)
+  const hasActiveSubscription = user.subscriptions.length > 0
 
   const errorHelper = (values, forBilling, billingValues, slot) => {
     const valid = validate(values)
@@ -229,6 +234,8 @@ function CheckoutContainer({ user }) {
           setCardError={setCardError}
           selectedStep={selectedStep}
           setCard={setCard}
+          cartHasSubscription={cartHasSubscription}
+          hasActiveSubscription={hasActiveSubscription}
         />
       ),
       error: cardError,

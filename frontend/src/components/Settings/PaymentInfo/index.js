@@ -110,6 +110,8 @@ function PaymentInfo({
   selectedStep,
   stepNumber,
   setCard,
+  cartHasSubscription,
+  hasActiveSubscription,
 }) {
   const classes = useStyles({ isCheckout, selectedStep, stepNumber })
   const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
@@ -130,6 +132,19 @@ function PaymentInfo({
   }
 
   const removeCard = () => {
+    const savedCards = user.paymentMethods.filter(method => method.last4 !== "")
+
+    // prevent removing/deleting cards
+    if (hasActiveSubscription && savedCards.length === 1) {
+      dispatchFeedback(
+        setSnackbar({
+          status: "error",
+          message:
+            "You cannot remove your last card with an active subscription, please add another card first.",
+        })
+      )
+      return
+    }
     setLoading(true)
 
     axios
@@ -316,9 +331,15 @@ function PaymentInfo({
               labelPlacement="start"
               control={
                 <Switch
-                  disabled={user.paymentMethods[slot].last4 !== ""}
+                  disabled={
+                    user.paymentMethods[slot].last4 !== "" ||
+                    cartHasSubscription
+                  }
                   checked={
-                    user.paymentMethods[slot].last4 !== "" ? true : saveCard
+                    user.paymentMethods[slot].last4 !== "" ||
+                    cartHasSubscription
+                      ? true
+                      : saveCard
                   }
                   onChange={() => setSaveCard(!saveCard)}
                   color="secondary"
