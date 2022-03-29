@@ -155,7 +155,7 @@ const Header = ({ categories }) => {
     {
       icon: search,
       alt: "search",
-      visible: true,
+      visible: false,
       onClick: () => console.log("search clicked..."),
     },
     { icon: cartIcon, alt: "cart", visible: true, link: "/cart" },
