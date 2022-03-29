@@ -83,7 +83,9 @@ const useStyles = makeStyles(theme => ({
   menuItem: {
     color: theme.palette.common.WHITE,
   },
-  // something: {},
+  buttonWrapper: {
+    width: "100%",
+  },
   // something: {},
 }))
 
@@ -97,13 +99,13 @@ function Subscription({ size, round, stock, name, variant, selectedVariant }) {
   const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
 
   const frequencies = [
-    "One Week",
+    "Week",
     "Two Weeks",
     "Three Weeks",
-    "One Month",
+    "Month",
     "Three Months",
     "Six Months",
-    "Yearly",
+    "Year",
   ]
 
   const handleCart = () => {
@@ -209,7 +211,7 @@ function Subscription({ size, round, stock, name, variant, selectedVariant }) {
             </Grid>
           </Grid>
 
-          <Grid item>
+          <Grid item classes={{ root: classes.buttonWrapper }}>
             <Button
               variant="contained"
               color="secondary"

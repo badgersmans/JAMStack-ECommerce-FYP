@@ -2,6 +2,7 @@ import React, { useContext } from "react"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import IconButton from "@material-ui/core/IconButton"
+import clsx from "clsx"
 import Chip from "@material-ui/core/Chip"
 import { makeStyles, useTheme } from "@material-ui/core/styles"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
@@ -33,7 +34,6 @@ const useStyles = makeStyles(theme => ({
   actionWrapper: {
     height: "2.8rem",
     width: "2.8rem",
-    marginBottom: -8,
     [theme.breakpoints.down("xs")]: {
       height: "1.8rem",
       width: "1.8rem",
@@ -41,14 +41,14 @@ const useStyles = makeStyles(theme => ({
   },
   infoContainer: {
     width: "35rem",
-    height: "8rem",
+    height: ({ subscription }) => (subscription ? "10rem" : "8rem"),
     position: "relative",
     marginLeft: "1rem",
   },
   chipWrapper: {
     position: "absolute",
     left: "0.5rem",
-    top: "3.5rem",
+    top: ({ subscription }) => (subscription ? "4.3rem" : "3.5rem"),
   },
   itemContainer: {
     margin: "2.6rem 0 2.6rem 11rem",
@@ -64,10 +64,24 @@ const useStyles = makeStyles(theme => ({
       padding: "12px 6px",
     },
   },
+  chipRoot: {
+    marginLeft: "1rem",
+  },
+  chipLabel: {
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "1.25rem",
+    },
+  },
+  actionContainer: {
+    marginBottom: "-0.5rem",
+  },
+  favoriteIcon: {
+    marginTop: 2,
+  },
 }))
 
 function CartItem({ item }) {
-  const classes = useStyles()
+  const classes = useStyles({ subscription: item.subscription })
   const theme = useTheme()
   const { dispatchCart } = useContext(CartContext)
   const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
@@ -84,7 +98,7 @@ function CartItem({ item }) {
       props: {
         color: theme.palette.secondary.main,
         size: matchesXS ? 1.8 : 2.8,
-        customizeStyles: classes.actionButton,
+        customizeStyles: clsx(classes.actionButton, classes.favoriteIcon),
         variant: item.variant.id,
       },
     },
@@ -135,6 +149,12 @@ function CartItem({ item }) {
 
         <Grid item classes={{ root: classes.chipWrapper }}>
           <Chip label={formatMoney(item.variant.price)} />
+          {item.subscription ? (
+            <Chip
+              label={`Every ${item.subscription}`}
+              classes={{ root: classes.chipRoot, label: classes.chipLabel }}
+            />
+          ) : null}
         </Grid>
 
         <Grid item container justify="space-between" alignItems="flex-end">
@@ -144,7 +164,14 @@ function CartItem({ item }) {
             </Typography>
           </Grid>
 
-          <Grid item container sm xs={5} justify="flex-end">
+          <Grid
+            item
+            container
+            sm
+            xs={5}
+            justify="flex-end"
+            classes={{ root: classes.actionContainer }}
+          >
             {actions.map((action, i) => (
               <Grid item key={i}>
                 {action.component ? (
