@@ -15,8 +15,7 @@ import QuantityButton from "../../ProductList/QuantityButton"
 import { colorIndex } from "../../ProductList/ProductFrameGrid"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
 import Favorite from "../../ui/Favorite"
-
-import subscription from "../../../images/subscription.svg"
+import Subscription from "../../ui/Subscription"
 
 const useStyles = makeStyles(theme => ({
   background: {
@@ -226,11 +225,7 @@ function ProductInfo({
         </Grid>
 
         <Grid item classes={{ root: classes.iconWrapper }}>
-          <img
-            src={subscription}
-            alt="add item to subscription"
-            className={classes.icon}
-          />
+          <Subscription />
         </Grid>
       </Grid>
 
