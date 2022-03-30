@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useState, useContext } from "react"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import IconButton from "@material-ui/core/IconButton"
@@ -7,8 +7,12 @@ import Chip from "@material-ui/core/Chip"
 import { makeStyles, useTheme } from "@material-ui/core/styles"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
 import QuantityButton from "../../ProductList/QuantityButton"
+import FrequencySelector from "../../ui/FrequencySelector"
 import formatMoney from "../../../../utils/formatMoney"
-import { removeFromCart } from "../../../contexts/actions/cart-actions"
+import {
+  removeFromCart,
+  changeFrequency,
+} from "../../../contexts/actions/cart-actions"
 
 import Favorite from "../../ui/Favorite"
 import SubscriptionIcon from "../../../images/Subscription"
@@ -66,6 +70,9 @@ const useStyles = makeStyles(theme => ({
   },
   chipRoot: {
     marginLeft: "1rem",
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
   chipLabel: {
     [theme.breakpoints.down("xs")]: {
@@ -83,11 +90,17 @@ const useStyles = makeStyles(theme => ({
 function CartItem({ item }) {
   const classes = useStyles({ subscription: item.subscription })
   const theme = useTheme()
+  const [frequency, setFrequency] = useState(item.subscription)
   const { dispatchCart } = useContext(CartContext)
   const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
 
   const handleDelete = () => {
     dispatchCart(removeFromCart(item.variant, item.quantity))
+  }
+
+  const handleFrequencyChange = newFrequency => {
+    dispatchCart(changeFrequency(item.variant, newFrequency))
+    setFrequency(newFrequency)
   }
 
   // console.log(`item ->`, item)
@@ -147,13 +160,32 @@ function CartItem({ item }) {
           </Grid>
         </Grid>
 
-        <Grid item classes={{ root: classes.chipWrapper }}>
-          <Chip label={formatMoney(item.variant.price)} />
+        <Grid
+          item
+          container
+          alignItems="center"
+          classes={{ root: classes.chipWrapper }}
+        >
+          <Grid item>
+            <Chip label={formatMoney(item.variant.price)} />
+          </Grid>
+
           {item.subscription ? (
-            <Chip
-              label={`Every ${item.subscription}`}
-              classes={{ root: classes.chipRoot, label: classes.chipLabel }}
-            />
+            <Grid item>
+              <FrequencySelector
+                value={frequency}
+                setValue={handleFrequencyChange}
+                chip={
+                  <Chip
+                    label={`Every ${frequency}`}
+                    classes={{
+                      root: classes.chipRoot,
+                      label: classes.chipLabel,
+                    }}
+                  />
+                }
+              />
+            </Grid>
           ) : null}
         </Grid>
 

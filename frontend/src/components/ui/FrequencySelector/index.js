@@ -50,7 +50,7 @@ const frequencies = [
   "Year",
 ]
 
-function FrequencySelector({ value, setValue }) {
+function FrequencySelector({ value, setValue, chip }) {
   const classes = useStyles()
   return (
     <Select
@@ -60,15 +60,17 @@ function FrequencySelector({ value, setValue }) {
       MenuProps={{ classes: { paper: classes.menu } }}
       classes={{ select: classes.select }}
       onChange={e => setValue(e.target.value)}
-      renderValue={selected => (
-        <Chip
-          label={selected}
-          classes={{
-            root: classes.chipRoot,
-            label: classes.chipLabel,
-          }}
-        />
-      )}
+      renderValue={selected =>
+        chip || (
+          <Chip
+            label={selected}
+            classes={{
+              root: classes.chipRoot,
+              label: classes.chipLabel,
+            }}
+          />
+        )
+      }
     >
       {frequencies.map(choice => (
         <MenuItem

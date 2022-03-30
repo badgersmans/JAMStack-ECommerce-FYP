@@ -2,6 +2,7 @@ import {
   ADD_TO_CART,
   REMOVE_FROM_CART,
   CLEAR_CART,
+  CHANGE_FREQUENCY,
 } from "../../actions/constants/action-types"
 
 const cartReducer = (state, action) => {
@@ -61,6 +62,10 @@ const cartReducer = (state, action) => {
           quantity: newQuantity,
         }
       }
+      saveCartToLocalStorage(newCart)
+      return newCart
+    case CHANGE_FREQUENCY:
+      newCart[existingIndex].subscription = action.payload.frequency
       saveCartToLocalStorage(newCart)
       return newCart
     case CLEAR_CART:
