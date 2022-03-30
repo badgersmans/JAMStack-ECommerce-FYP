@@ -13,9 +13,9 @@ import {
   removeFromCart,
   changeFrequency,
 } from "../../../contexts/actions/cart-actions"
+import Subscription from "../../ui/Subscription"
 
 import Favorite from "../../ui/Favorite"
-import SubscriptionIcon from "../../../images/Subscription"
 import DeleteIcon from "../../../images/Delete"
 import { CartContext } from "../../../contexts"
 
@@ -115,7 +115,14 @@ function CartItem({ item }) {
         variant: item.variant.id,
       },
     },
-    { icon: SubscriptionIcon, color: theme.palette.secondary.main },
+    {
+      component: Subscription,
+      props: {
+        color: theme.palette.secondary.main,
+        isCart: item,
+        size: matchesXS ? 1.8 : 2.8,
+      },
+    },
     {
       icon: DeleteIcon,
       color: theme.palette.error.main,

@@ -230,6 +230,7 @@ function ProductInfo({
             variant={productVariants[selectedVariant]}
             name={name.split(" ")[0]}
             selectedVariant={selectedVariant}
+            noPadding
           />
         </Grid>
       </Grid>
