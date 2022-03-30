@@ -1,9 +1,6 @@
 import React, { useState, useContext } from "react"
 import Grid from "@material-ui/core/Grid"
 import Dialog from "@material-ui/core/Dialog"
-import Select from "@material-ui/core/Select"
-import MenuItem from "@material-ui/core/MenuItem"
-import Chip from "@material-ui/core/Chip"
 import Button from "@material-ui/core/Button"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
 import clsx from "clsx"
@@ -15,6 +12,7 @@ import { CartContext, FeedbackContext, UserContext } from "../../../contexts"
 import { addToCart } from "../../../contexts/actions/cart-actions"
 import { setSnackbar } from "../../../contexts/actions/feedback-actions"
 import SubscriptionIcon from "../../../images/Subscription"
+import FrequencySelector from "../FrequencySelector"
 
 const useStyles = makeStyles(theme => ({
   iconWrapper: {
@@ -61,28 +59,7 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: theme.palette.primary.main,
     },
   },
-  chipRoot: {
-    backgroundColor: theme.palette.common.WHITE,
-    height: "3rem",
-    borderRadius: 50,
-    "&:hover": {
-      cursor: "pointer",
-    },
-  },
-  chipLabel: {
-    color: theme.palette.secondary.main,
-  },
-  select: {
-    "&.MuiSelect-select": {
-      paddingRight: 0,
-    },
-  },
-  menu: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  menuItem: {
-    color: theme.palette.common.WHITE,
-  },
+
   buttonWrapper: {
     width: "100%",
   },
@@ -98,16 +75,6 @@ function Subscription({ size, round, stock, name, variant, selectedVariant }) {
   const { dispatchCart } = useContext(CartContext)
   const { user } = useContext(UserContext)
   const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
-
-  const frequencies = [
-    "Week",
-    "Two Weeks",
-    "Three Weeks",
-    "Month",
-    "Three Months",
-    "Six Months",
-    "Year",
-  ]
 
   const handleCart = () => {
     dispatchCart(
@@ -195,34 +162,7 @@ function Subscription({ size, round, stock, name, variant, selectedVariant }) {
             </Grid>
 
             <Grid item>
-              <Select
-                value={frequency}
-                disableUnderline
-                IconComponent={() => null}
-                MenuProps={{ classes: { paper: classes.menu } }}
-                classes={{ select: classes.select }}
-                onChange={e => setFrequency(e.target.value)}
-                renderValue={selected => (
-                  <Chip
-                    label={selected}
-                    classes={{
-                      root: classes.chipRoot,
-                      label: classes.chipLabel,
-                    }}
-                  />
-                )}
-              >
-                {frequencies.map(choice => (
-                  <MenuItem
-                    key={choice}
-                    value={choice}
-                    classes={{ root: classes.menuItem }}
-                  >
-                    {" "}
-                    {choice}{" "}
-                  </MenuItem>
-                ))}
-              </Select>
+              <FrequencySelector value={frequency} setValue={setFrequency} />
             </Grid>
           </Grid>
 
