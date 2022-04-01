@@ -6,6 +6,7 @@ import axios from "axios"
 import { UserContext, FeedbackContext } from "../../../../contexts"
 import { setSnackbar } from "../../../../contexts/actions/feedback-actions"
 import SettingsDataGrid from "../../SettingsDataGrid"
+import formatMoney from "../../../../../utils/formatMoney"
 
 const useStyles = makeStyles(theme => ({
   // something: {},
@@ -49,6 +50,37 @@ function Subscriptions({ setSelectedSetting }) {
 
   console.log(`subscriptions ->`, subscriptions)
 
+  const createRows = data =>
+    data.map(
+      ({
+        shippingInfo,
+        shippingAddress,
+        billingInfo,
+        billingAddress,
+        paymentMethod,
+        productName,
+        product_variant,
+        quantity,
+        frequency,
+        next_delivery,
+        id,
+      }) => ({
+        details: {
+          shippingInfo,
+          shippingAddress,
+          billingInfo,
+          billingAddress,
+          paymentMethod,
+        },
+        item: { productName, product_variant },
+        quantity: { quantity, productName, product_variant },
+        frequency,
+        next_delivery,
+        total: formatMoney(product_variant.price * 1.14),
+        id,
+      })
+    )
+
   const columns = [
     { field: "details", headerName: "Details", width: 250, sortable: false },
     { field: "item", headerName: "Item", width: 250, sortable: false },
@@ -59,16 +91,19 @@ function Subscriptions({ setSelectedSetting }) {
       width: 250,
       sortable: false,
     },
-    { field: "next order", headerName: "Next Order", width: 250 },
+    { field: "next_delivery", headerName: "Next Delivery", width: 250 },
     { field: "total", headerName: "Total", width: 250 },
     { field: "", width: 250, sortable: false },
   ]
 
+  const rows = createRows(subscriptions)
+  console.log(`rows ->`, rows)
   return (
     <SettingsDataGrid
-      rows={[]}
+      rows={rows}
       columns={columns}
       setSelectedSetting={setSelectedSetting}
+      rowsPerPage={10}
     />
   )
 }
