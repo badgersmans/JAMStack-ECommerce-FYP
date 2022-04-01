@@ -160,7 +160,7 @@ function Confirmation({
     (total, item) => total + item.variant.price * item.quantity,
     0
   )
-  const tax = subtotal * 0.14
+  const tax = (subtotal + shipping?.price) * 0.14
 
   const topFields = [
     {

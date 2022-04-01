@@ -67,7 +67,7 @@ module.exports = {
     //   find() returns undefined if not found (meaning shipping info has been tampered)
     if (
       shippingValid === undefined ||
-      (serverTotal * 1.14 + shippingValid.price).toFixed(2) !== total
+      ((serverTotal + shippingValid.price) * 1.14).toFixed(2) !== total
     ) {
       ctx.send({ error: "Invalid Cart" }, 400);
       //   there are some products unavailable
