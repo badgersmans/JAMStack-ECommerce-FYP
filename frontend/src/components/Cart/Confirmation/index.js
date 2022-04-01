@@ -204,13 +204,13 @@ function Confirmation({
         <img src={cardAdornment} alt="credit card" className={classes.card} />
       ),
     },
-    {
-      promo: {
-        helperText: "",
-        placeholder: "Promo code",
-        startAdornment: <img src={promoAdornment} alt="promo code" />,
-      },
-    },
+    // {
+    //   promo: {
+    //     helperText: "",
+    //     placeholder: "Promo code",
+    //     startAdornment: <img src={promoAdornment} alt="promo code" />,
+    //   },
+    // },
   ]
 
   const prices = [

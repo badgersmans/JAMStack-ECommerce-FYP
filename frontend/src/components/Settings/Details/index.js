@@ -190,6 +190,16 @@ function Details({
     ]
   }
 
+  const handleValues = values => {
+    if (billing === slot && !noSlots) {
+      setBillingValues(values)
+    }
+    setValues(values)
+  }
+
+  // console.log(`values ->`, values);
+  // console.log(`billing values ->`, billingValues);
+
   return (
     <Grid
       item
@@ -222,9 +232,7 @@ function Details({
           <Form
             fields={fieldSet}
             values={billing === slot && !noSlots ? billingValues : values}
-            setValues={
-              billing === slot && !noSlots ? setBillingValues : setValues
-            }
+            setValues={handleValues}
             errors={errors}
             setErrors={setErrors}
             isWhite
