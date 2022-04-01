@@ -19,7 +19,9 @@ const useStyles = makeStyles(theme => ({
   mainContainer: {
     height: "10rem",
   },
-  // productImage: {},
+  subscriptionChip: {
+    marginTop: "0.6rem",
+  },
   // productImage: {},
   // productImage: {},
   // productImage: {},
@@ -57,10 +59,23 @@ function OrderDetailItems({ item }) {
           <Typography variant="body2">Size: {item.variant.size}</Typography>
         ) : null}
 
-        <Chip
-          label={formatMoney(item.variant.price)}
-          classes={{ root: classes.chipRoot }}
-        />
+        <Grid container direction="column">
+          <Grid item>
+            <Chip
+              label={formatMoney(item.variant.price)}
+              classes={{ root: classes.chipRoot }}
+            />
+          </Grid>
+
+          {item.subscription ? (
+            <Grid item classes={{ root: classes.subscriptionChip }}>
+              <Chip
+                label={`Every ${item.subscription}`}
+                classes={{ root: classes.chipRoot }}
+              />
+            </Grid>
+          ) : null}
+        </Grid>
       </Grid>
     </Grid>
   )

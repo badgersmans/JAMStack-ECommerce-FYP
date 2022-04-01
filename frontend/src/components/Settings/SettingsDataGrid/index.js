@@ -92,7 +92,7 @@ function SettingsDataGrid({
       <DataGrid
         rows={rows}
         columns={columns}
-        pageSize={rowsPerPage || 5}
+        pageSize={rowsPerPage || 3}
         onRowClick={e => (setOpen ? setOpen(e.row.id) : null)}
         hideFooterSelectedRowCount
       />
