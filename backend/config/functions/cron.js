@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * Cron config that gives you an opportunity
@@ -18,4 +18,14 @@ module.exports = {
   // '0 1 * * 1': () => {
   //
   // }
+
+  // everyday at 8am
+  // '0 8 * * *': async () => {
+
+  // }
+
+  // everyday at 8am
+  "*/1 * * * * *": async (date) => {
+    console.log(date);
+  },
 };
