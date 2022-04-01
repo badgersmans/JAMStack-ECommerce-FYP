@@ -3,13 +3,17 @@ import Grid from "@material-ui/core/Grid"
 import Dialog from "@material-ui/core/Dialog"
 import Button from "@material-ui/core/Button"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
+import Tooltip from "@material-ui/core/Tooltip"
 import clsx from "clsx"
 import IconButton from "@material-ui/core/IconButton"
 import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/core/styles"
 import QuantityButton from "../../ProductList/QuantityButton"
 import { CartContext, FeedbackContext, UserContext } from "../../../contexts"
-import { addToCart } from "../../../contexts/actions/cart-actions"
+import {
+  addToCart,
+  toggleSubscription,
+} from "../../../contexts/actions/cart-actions"
 import { setSnackbar } from "../../../contexts/actions/feedback-actions"
 import SubscriptionIcon from "../../../images/Subscription"
 import FrequencySelector from "../FrequencySelector"
@@ -76,6 +80,7 @@ function Subscription({
   selectedVariant,
   isCart,
   noPadding,
+  cartFrequency,
 }) {
   const classes = useStyles({ size, noPadding })
   const [open, setOpen] = useState(false)
@@ -104,6 +109,11 @@ function Subscription({
   }
 
   const handleOpen = () => {
+    if (isCart) {
+      dispatchCart(toggleSubscription(isCart.variant, cartFrequency))
+      return
+    }
+
     if (user.username === "Guest") {
       dispatchFeedback(
         setSnackbar({
@@ -118,14 +128,16 @@ function Subscription({
   }
   return (
     <>
-      <IconButton
-        onClick={() => setOpen(handleOpen)}
-        classes={{ root: classes.iconButton }}
-      >
-        <span className={classes.iconWrapper}>
-          <SubscriptionIcon color={color} />
-        </span>
-      </IconButton>
+      <Tooltip title={"Toggle Subscription"} placement="bottom">
+        <IconButton
+          onClick={() => setOpen(handleOpen)}
+          classes={{ root: classes.iconButton }}
+        >
+          <span className={classes.iconWrapper}>
+            <SubscriptionIcon color={color} />
+          </span>
+        </IconButton>
+      </Tooltip>
 
       <Dialog
         open={open}

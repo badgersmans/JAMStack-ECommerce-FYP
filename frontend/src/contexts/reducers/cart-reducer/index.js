@@ -3,6 +3,7 @@ import {
   REMOVE_FROM_CART,
   CLEAR_CART,
   CHANGE_FREQUENCY,
+  TOGGLE_SUBSCRIPTION,
 } from "../../actions/constants/action-types"
 
 const cartReducer = (state, action) => {
@@ -66,6 +67,16 @@ const cartReducer = (state, action) => {
       return newCart
     case CHANGE_FREQUENCY:
       newCart[existingIndex].subscription = action.payload.frequency
+      saveCartToLocalStorage(newCart)
+      return newCart
+    case TOGGLE_SUBSCRIPTION:
+      // check existing subscription !! coerces to boolean
+      const existingSubscription = !!newCart[existingIndex].subscription
+      if (existingSubscription) {
+        delete newCart[existingIndex].subscription
+      } else {
+        newCart[existingIndex].subscription = action.payload.frequency
+      }
       saveCartToLocalStorage(newCart)
       return newCart
     case CLEAR_CART:

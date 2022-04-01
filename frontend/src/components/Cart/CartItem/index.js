@@ -90,7 +90,7 @@ const useStyles = makeStyles(theme => ({
 function CartItem({ item }) {
   const classes = useStyles({ subscription: item.subscription })
   const theme = useTheme()
-  const [frequency, setFrequency] = useState(item.subscription)
+  const [frequency, setFrequency] = useState(item.subscription || "Month")
   const { dispatchCart } = useContext(CartContext)
   const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
 
@@ -112,7 +112,6 @@ function CartItem({ item }) {
         color: theme.palette.secondary.main,
         size: matchesXS ? 1.8 : 2.8,
         customizeStyles: clsx(classes.actionButton, classes.favoriteIcon),
-        variant: item.variant.id,
       },
     },
     {
@@ -121,6 +120,8 @@ function CartItem({ item }) {
         color: theme.palette.secondary.main,
         isCart: item,
         size: matchesXS ? 1.8 : 2.8,
+        variant: item.variant,
+        cartFrequency: frequency,
       },
     },
     {
