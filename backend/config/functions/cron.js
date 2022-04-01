@@ -34,13 +34,54 @@ module.exports = {
 
         try {
           const paymentIntent = await stripe.paymentIntents.create({
-            amount: Math.round(subscription.variant.price * 0.14 * 100),
+            amount: Math.round(subscription.variant.price * 1.14 * 100),
             currency: "myr",
             customer: subscription.user.stripeID,
             payment_method: paymentMethod.id,
             off_session: true,
             confirm: true,
           });
+
+          let order = await strapi.services.order.create({
+            shippingAddress: subscription.shippingAddress,
+            billingAddress: subscription.billingAddress,
+            shippingInfo: subscription.shippingInfo,
+            billingInfo: subscription.billingInfo,
+            shippingOption: { label: "subscription", price: 0 },
+            subtotal: subscription.product_variant.price,
+            tax: subscription.product_variant.price * 0.14,
+            items: [
+              {
+                variant: subscription.product_variant,
+                name: subscription.productName,
+                quantity: subscription.quantity,
+                stock: subscription.product_variant.quantity,
+                product: subscription.product_variant.product,
+              },
+            ],
+            transaction: paymentIntent.id,
+            paymentMethod: subscription.paymentMethod,
+            user: subscription.user.id,
+            subscription: subscription.id,
+          });
+
+          const emailOrderReceipt =
+            await strapi.services.order.emailOrderReceipt(order);
+          const frequencies = await strapi.services.order.frequency();
+
+          await strapi.plugins["email"].services.email.send({
+            to: subscription.billingInfo.email,
+            subject: "Dev++ Subscription Renewed",
+            html: emailOrderReceipt,
+          });
+
+          const frequency = frequencies.find(
+            (option) => option.value === subscription.frequency
+          );
+          await strapi.services.subscription.update(
+            { id: subscription.id },
+            { next_delivery: frequency.delivery() }
+          );
         } catch (error) {
           // notify customer that payment failed, ask them to enter new information
           console.log(error);
