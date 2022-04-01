@@ -132,7 +132,10 @@ const Header = ({ categories }) => {
       classes={{ paper: classes.drawer }}
     >
       <List disablePadding>
-        {routes.map((c, i) => (
+        {[
+          ...routes,
+          { node: { name: "Account", strapiId: "account", link: "/account" } },
+        ].map((c, i) => (
           <ListItem
             selected={activeIndex() === i}
             component={Link}

@@ -38,9 +38,11 @@ function FeaturedProducts() {
               averageRating
               name
               id
+              category
             }
             strapiId
             price
+            style
           }
         }
       }

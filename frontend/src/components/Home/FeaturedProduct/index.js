@@ -9,6 +9,7 @@ import Chip from "@material-ui/core/Chip"
 import Grid from "@material-ui/core/Grid"
 import { makeStyles } from "@material-ui/core/styles"
 import formatMoney from "../../../../utils/formatMoney"
+import { Link } from "gatsby"
 
 import featuredAdornment from "../../../images/featured-adornment.svg"
 import frame from "../../../images/product-frame-grid.svg"
@@ -90,6 +91,7 @@ const useStyles = makeStyles(theme => ({
 function FeaturedProduct({ node, i, matchesMD, expanded, setExpanded }) {
   const classes = useStyles()
   const [rating, setRating] = useState(0)
+  console.log(`node ->`, node)
 
   const alignment = matchesMD
     ? "center"
@@ -158,7 +160,11 @@ function FeaturedProduct({ node, i, matchesMD, expanded, setExpanded }) {
           />
         </Grid>
         <Grid item classes={{ root: classes.exploreContainer }}>
-          <Button classes={{ root: classes.exploreButton }}>
+          <Button
+            classes={{ root: classes.exploreButton }}
+            // component={Link}
+            // to={`/${node.category.name.toLowerCase()}`}
+          >
             <Typography variant="h5">Details</Typography>
             <img
               src={explore}
