@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import axios from "axios"
 import { UserContext, FeedbackContext } from "../../../../contexts"
 import { setSnackbar } from "../../../../contexts/actions/feedback-actions"
+import SettingsDataGrid from "../../SettingsDataGrid"
 
 const useStyles = makeStyles(theme => ({
   // something: {},
@@ -18,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   // something: {},
 }))
 
-function Subscriptions() {
+function Subscriptions({ setSelectedSetting }) {
   const classes = useStyles()
   const { user, dispatchUser } = useContext(UserContext)
   const { feedback, dispatchFeedback } = useContext(FeedbackContext)
@@ -45,8 +46,31 @@ function Subscriptions() {
         )
       })
   }, [])
+
   console.log(`subscriptions ->`, subscriptions)
-  return <div>subscriptions...</div>
+
+  const columns = [
+    { field: "details", headerName: "Details", width: 250, sortable: false },
+    { field: "item", headerName: "Item", width: 250, sortable: false },
+    { field: "quantity", headerName: "Quantity", width: 250, sortable: false },
+    {
+      field: "frequency",
+      headerName: "Frequency",
+      width: 250,
+      sortable: false,
+    },
+    { field: "next order", headerName: "Next Order", width: 250 },
+    { field: "total", headerName: "Total", width: 250 },
+    { field: "", width: 250, sortable: false },
+  ]
+
+  return (
+    <SettingsDataGrid
+      rows={[]}
+      columns={columns}
+      setSelectedSetting={setSelectedSetting}
+    />
+  )
 }
 
 export default Subscriptions
