@@ -212,7 +212,12 @@ function Register({
         {emailPass ? null : (
           <Grid item>
             <Tooltip title="Continue registration" placement="left">
-              <IconButton onClick={() => navigateToLogin("forward")}>
+              <IconButton
+                onClick={() => navigateToLogin("forward")}
+                // disabled={
+                //   Object.keys(errors).length !== Object.keys(values).length
+                // }
+              >
                 <img
                   src={forward}
                   alt="Continue registration"
