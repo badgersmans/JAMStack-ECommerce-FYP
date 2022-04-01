@@ -214,9 +214,10 @@ function Subscriptions({ setSelectedSetting }) {
       field: "",
       width: 250,
       sortable: false,
+      disableColumnMenu: true,
       renderCell: () => (
         <Grid container>
-          <Grid item>
+          {/* <Grid item>
             <IconButton classes={{ root: classes.iconButton }}>
               <img
                 src={pauseIcon}
@@ -224,7 +225,7 @@ function Subscriptions({ setSelectedSetting }) {
                 className={classes.pause}
               />
             </IconButton>
-          </Grid>
+          </Grid> */}
 
           <Grid item>
             <IconButton classes={{ root: classes.iconButton }}>

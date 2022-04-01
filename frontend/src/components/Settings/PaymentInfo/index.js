@@ -133,9 +133,15 @@ function PaymentInfo({
 
   const removeCard = () => {
     const savedCards = user.paymentMethods.filter(method => method.last4 !== "")
-
-    // prevent removing/deleting cards
-    if (hasActiveSubscription && savedCards.length === 1) {
+    const cardAssociatedToSubscription = user.subscriptions.find(
+      sub => sub.paymentMethod.last4 === card.last4
+    )
+    // prevent removing/deleting the last remaining cards and the cards that are associated to a subscription.
+    // Also if there is there is an existing subscription...
+    if (
+      (hasActiveSubscription && savedCards.length === 1) ||
+      cardAssociatedToSubscription
+    ) {
       dispatchFeedback(
         setSnackbar({
           status: "error",
