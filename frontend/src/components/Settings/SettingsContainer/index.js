@@ -12,6 +12,7 @@ import useResizeAware from "react-resize-aware"
 import Settings from "../Settings"
 import OrderHistory from "../Settings/OrderHistory"
 import Favorites from "../Favorites"
+import Subscriptions from "../Settings/Subscriptions"
 
 import accountIcon from "../../../images/account.svg"
 import settingsIcon from "../../../images/settings.svg"
@@ -100,7 +101,7 @@ function SettingsContainer() {
   const buttons = [
     { label: "Order History", icon: orderHistoryIcon, component: OrderHistory },
     { label: "Favorites", icon: favIcon, component: Favorites },
-    { label: "Subscriptions", icon: subscription },
+    { label: "Subscriptions", icon: subscription, component: Subscriptions },
     { label: "Settings", icon: settingsIcon, component: Settings, large: true },
   ]
 
