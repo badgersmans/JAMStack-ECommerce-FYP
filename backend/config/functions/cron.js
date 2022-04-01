@@ -13,10 +13,11 @@ const dayjs = require("dayjs");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 module.exports = {
-  // everyday at 8am
   // "*/1 * * * *": async () => {
-  // "5 * * * *": async () => {
+  // "*/5 * * * * *": async () => {
+  // everyday at 8am
   "0 8 * * *": async () => {
+    console.log("SUBSCRIPTION RENEWING...");
     const subscriptionsToday = await strapi.services.subscription.find({
       next_delivery: dayjs().format(),
     });
@@ -97,7 +98,6 @@ module.exports = {
     );
   },
 
-  // everyday at 8am
   // "*/1 * * * * *": async (date) => {
   // console.log(date);
   // },
