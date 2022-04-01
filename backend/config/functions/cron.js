@@ -14,6 +14,8 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 module.exports = {
   // everyday at 8am
+  // "*/1 * * * *": async () => {
+  // "5 * * * *": async () => {
   "0 8 * * *": async () => {
     const subscriptionsToday = await strapi.services.subscription.find({
       next_delivery: dayjs().format(),
@@ -21,6 +23,8 @@ module.exports = {
 
     await Promise.allSettled(
       subscriptionsToday.map(async (subscription) => {
+        // console.log(`subscription ->`, subscription);
+        // return;
         // get user all payment methods
         const paymentMethods = await stripe.paymentMethods.list({
           customer: subscription.user.stripeID,
@@ -34,7 +38,7 @@ module.exports = {
 
         try {
           const paymentIntent = await stripe.paymentIntents.create({
-            amount: Math.round(subscription.variant.price * 1.14 * 100),
+            amount: Math.round(subscription.product_variant.price * 1.14 * 100),
             currency: "myr",
             customer: subscription.user.stripeID,
             payment_method: paymentMethod.id,
@@ -49,6 +53,7 @@ module.exports = {
             billingInfo: subscription.billingInfo,
             shippingOption: { label: "subscription", price: 0 },
             subtotal: subscription.product_variant.price,
+            total: subscription.product_variant.price * 1.14,
             tax: subscription.product_variant.price * 0.14,
             items: [
               {
@@ -64,6 +69,8 @@ module.exports = {
             user: subscription.user.id,
             subscription: subscription.id,
           });
+
+          // console.log(`order ->`, order);
 
           const emailOrderReceipt =
             await strapi.services.order.emailOrderReceipt(order);
