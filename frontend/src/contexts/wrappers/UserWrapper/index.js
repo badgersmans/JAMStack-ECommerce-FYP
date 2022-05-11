@@ -18,6 +18,7 @@ export const UserWrapper = ({ children }) => {
 
   useEffect(() => {
     if (storedUser) {
+      console.log("is there a user?")
       setTimeout(() => {
         axios
           .get(`${process.env.GATSBY_STRAPI_URL}/users/me`, {
@@ -33,6 +34,7 @@ export const UserWrapper = ({ children }) => {
                 onboarding: true,
               })
             )
+            // console.log("user profile?", response.data)
           })
           .catch(error => {
             console.error(error)

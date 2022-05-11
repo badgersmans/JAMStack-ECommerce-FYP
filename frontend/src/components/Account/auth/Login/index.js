@@ -167,7 +167,7 @@ function Login({
             onboarding: true,
           })
         )
-        // console.log("user profile", response.data.user)
+        // console.log("user profile", response.data)
         // console.log("JWT", response.data.jwt)
       })
       .catch(error => {
