@@ -18,7 +18,7 @@ export const UserWrapper = ({ children }) => {
 
   useEffect(() => {
     if (storedUser) {
-      console.log("is there a user?")
+      // console.log("is there a user?")
       setTimeout(() => {
         axios
           .get(`${process.env.GATSBY_STRAPI_URL}/users/me`, {
